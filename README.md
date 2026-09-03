@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div align="center">
 
-## Getting Started
+# آویستا (Avista)
 
-First, run the development server:
+### بستر مدرن، آزاد و پژوهش‌محور برای آموزش دین‌دبیرهٔ اوستایی
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
+[![Built with Love](https://img.shields.io/badge/Made%20with-%F0%9F%92%99%20by%20Hurad-blue)](https://github.com/itshurad)
+
+<p align="center">
+  یادگیری گام‌به‌گام، علمی و تعاملی یکی از دقیق‌ترین خط‌های آوایی تاریخ جهان باستان، بر پایهٔ استانداردهای بین‌المللی یونیکد و زبان‌شناسی کهن ایرانی.
+</p>
+
+[پیش‌نمایش آنلاین](https://avista.ir) • [گزارش خطا](https://github.com/itshurad/Avista/issues) • [مشارکت در توسعه](#همکاری-و-مشارکت)
+
+</div>
+
+---
+
+## دربارهٔ پروژه
+
+دین‌دبیرهٔ اوستایی که در روزگار ساسانیان برای ثبت دقیق آواهای اوستا پدید آمد، با بیش از ۵۰ نویسهٔ مجزا توانایی نمایاندن ریزترین دگرگونی‌های صوتی را دارد. **آویستا** تلاشی است مستقل، متن‌باز و بدون اهداف بازرگانی برای زنده نگه‌داشتن و دسترس‌پذیر ساختن این گنجینهٔ مکتوب برای همگان.
+
+طراحی سامانه بر پایهٔ هویت کتیبه‌ای، رنگ‌های طبیعی (کاغذ کهن، لاجوردی، فیروزه‌ای و مسی) و بدون وابستگی به سرور و پایگاه داده ساخته شده است.
+
+---
+
+## ویژگی‌های کلیدی
+
+- **پیکرهٔ کامل دبیره:** پوشش تمامی نویسه‌های رسمی یونیکد اوستایی (`U+10B00` تا `U+10B35`) همراه با ترانویسی، مخرج‌های صوتی بین‌المللی (IPA) و نمونه‌های متنی.
+- **واژه‌نامه و دانشنامهٔ گاهانی:** دربردارندهٔ بیش از ۲۰۰ واژهٔ ریشه‌شناسی‌شده بر پایهٔ پژوهش‌های _کریستیان بارتولومه_ همراه با فیلتر موضوعی و صفحه‌بندی پایدار متصل به نشانی وب.
+- **سامانهٔ تکرار فاصله‌دار (SRS):** الگوریتم مرور حافظه‌محور در سطح مرورگر برای یادآوری نویسه‌های دشوار در بازه‌های ۱، ۳، ۷ و ۱۴ روزه.
+- **آزمون‌های مرحله‌ای:** آزمون‌های چهارگزینه‌ای سنجیده پس از هر گام آموزشی بدون استرس و با بازخورد آواشناختی.
+- **پایداری کامل در کلاینت:** نگهداری کارنامه، نمرات و زنجیرهٔ استمرار (Streak) با استفاده از `localStorage` بدون نیاز به ثبت‌نام یا ردیابی کاربر.
+- **پوستهٔ روز و شب عمیق:** طراحی دوگانه با رنگ‌های استخوانی و قیرگون ملایم متکی به متغیرهای یکپارچهٔ CSS.
+- **واکنش‌گرایی لمسی:** منوی کشویی جانبی ملایم و سازگار با تلفن‌های همراه بدون جابجایی ناخواستهٔ صفحه.
+
+---
+
+## پشتهٔ فناوری (Tech Stack)
+
+- **چارچوب:** Next.js (App Router, JavaScript)
+- **استایل‌دهی:** Tailwind CSS v4 + HeroUI
+- **آیکون‌ها:** Lucide React
+- **قلم:** Vazirmatn + قلم استاندارد یونیکد اوستایی
+- **معماری حالت:** Client-side State + URL Search Params + Web Storage API
+
+---
+
+## راه‌اندازی محلی
+
+پیش‌نیاز: نصب بودن `Node.js` (نگارش ۱۸ به بالا).
 
 ```bash
+# ۱. دریافت رونوشت مخزن
+git clone [https://github.com/itshurad/Avista.git](https://github.com/itshurad/Avista.git)
+
+# ۲. ورود به پوشهٔ پروژه
+cd Avista
+
+# ۳. نصب وابستگی‌ها
+npm install
+
+# ۴. اجرای سرور توسعه
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
