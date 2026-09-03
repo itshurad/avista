@@ -57,8 +57,8 @@ export default function DonateModal({ isOpen, onClose }) {
               <span className="text-[11px] text-[var(--av-text-muted)] block">
                 شماره کارت بانکی (بلوبانک / سامان)
               </span>
-              <span className="font-mono text-xs font-bold text-[var(--av-text)] tracking-wider">
-                ۶۲۱۹ - ۸۶۱۰ - **** - ۵۴۲۱
+              <span className="font-mono flex  text-xs font-bold text-[var(--av-text)] tracking-wider">
+                6219 8619 1316 4645
               </span>
             </div>
             <Button
@@ -74,7 +74,7 @@ export default function DonateModal({ isOpen, onClose }) {
             </Button>
           </div>
 
-          {/* تتر / رمزارز */}
+          {/* تتر / رمزارز
           <div className="p-3.5 rounded-[6px] border border-[var(--av-border)] bg-[var(--av-bg)] flex items-center justify-between">
             <div className="text-right max-w-[240px]">
               <span className="text-[11px] text-[var(--av-text-muted)] block">
@@ -95,7 +95,7 @@ export default function DonateModal({ isOpen, onClose }) {
                 <Copy className="h-3.5 w-3.5" />
               )}
             </Button>
-          </div>
+          </div> */}
         </div>
 
         <div className="text-center pt-2">
