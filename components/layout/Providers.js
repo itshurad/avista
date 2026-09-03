@@ -9,7 +9,6 @@ const ThemeContext = createContext({
 
 export function Providers({ children }) {
   const [theme, setTheme] = useState("light");
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("avista_theme");
@@ -21,7 +20,6 @@ export function Providers({ children }) {
     setTheme(initialTheme);
     document.documentElement.setAttribute("data-theme", initialTheme);
     document.documentElement.classList.toggle("dark", initialTheme === "dark");
-    setMounted(true);
   }, []);
 
   const toggleTheme = () => {

@@ -11,13 +11,13 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="mt-auto border-t border-[var(--av-border)] bg-[var(--av-surface)] transition-colors">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+      <footer className="mt-auto border-t border-[var(--av-surface-border)] bg-[var(--av-surface)] transition-colors">
+        <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-            {/* معرفی و پیام همیاری */}
+            {/* معرفی و دکمه همیاری */}
             <div className="md:col-span-2 space-y-3">
               <Logo />
-              <p className="text-xs text-[var(--av-text-muted)] max-w-sm leading-relaxed">
+              <p className="text-xs text-[var(--av-text-secondary)] max-w-sm leading-relaxed">
                 آویستا؛ بستری آزاد و مستقل برای آموزش علمی خط و آواشناسی
                 اوستایی. این پروژه بدون هدف بازرگانی و برای پاسداری از میراث کهن
                 پارسی ساخته شده است.
@@ -26,7 +26,7 @@ export default function Footer() {
                 <button
                   type="button"
                   onClick={() => setDonateOpen(true)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[var(--av-accent)] border border-[var(--av-accent)]/30 bg-[var(--av-accent-soft)] hover:bg-[var(--av-accent)] hover:text-white rounded-[6px] transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 h-8 px-3 text-xs font-semibold text-[var(--av-brand)] bg-[var(--av-brand-soft)] hover:bg-[var(--av-brand)] hover:text-white rounded-full transition-all cursor-pointer"
                 >
                   <Coffee className="h-3.5 w-3.5" />
                   <span>مهرانه و همیاری (یک پیاله چای)</span>
@@ -39,7 +39,7 @@ export default function Footer() {
               <h4 className="text-xs font-bold text-[var(--av-text)] mb-3">
                 بخش‌های سامانه
               </h4>
-              <ul className="space-y-2 text-xs text-[var(--av-text-muted)]">
+              <ul className="space-y-2 text-xs text-[var(--av-text-secondary)]">
                 <li>
                   <Link href="/learn" className="hover:text-[var(--av-text)]">
                     فهرست نویسه‌ها
@@ -69,12 +69,12 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* مراجع و پیوند مخزن پروژه */}
+            {/* مراجع و مستندات */}
             <div>
               <h4 className="text-xs font-bold text-[var(--av-text)] mb-3">
                 دانش و مستندات
               </h4>
-              <ul className="space-y-2 text-xs text-[var(--av-text-muted)]">
+              <ul className="space-y-2 text-xs text-[var(--av-text-secondary)]">
                 <li>
                   <Link href="/sources" className="hover:text-[var(--av-text)]">
                     مراجع علمی و دانشگاهی
@@ -99,7 +99,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="mt-10 border-t border-[var(--av-border)] pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[var(--av-text-muted)] gap-3">
+          <div className="mt-10 border-t border-[var(--av-surface-border)] pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[var(--av-text-muted)] gap-3">
             <span>
               داده‌ها بر پایه استاندارد یونیکد و مراجع کریستیان بارتولومه و کارل
               هافمن.
@@ -118,7 +118,7 @@ export default function Footer() {
                 href="https://github.com/itshurad"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-bold text-[var(--av-primary)] hover:underline transition-all"
+                className="font-bold text-[var(--av-brand)] hover:underline transition-all"
               >
                 هوراد
               </a>

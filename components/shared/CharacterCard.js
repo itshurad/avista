@@ -1,5 +1,7 @@
+"use client";
+
 import Link from "next/link";
-import Badge from "./Badge";
+import { motion } from "framer-motion";
 
 export default function CharacterCard({
   character,
@@ -7,51 +9,59 @@ export default function CharacterCard({
   isLocked = false,
   href,
 }) {
-  const content = (
-    <div
-      className={`group relative flex flex-col items-center justify-between rounded-[8px] border p-5 transition-all duration-200 ${
+  const card = (
+    <motion.div
+      whileHover={isLocked ? {} : { y: -4, transition: { duration: 0.2 } }}
+      className={`group relative flex flex-col justify-between rounded-2xl border border-[var(--av-surface-border)] bg-[var(--av-surface)] p-6 transition-all duration-300 ${
         isLocked
-          ? "border-[var(--av-border)] bg-[var(--av-surface-soft)]/50 opacity-60 cursor-not-allowed"
-          : "border-[var(--av-border)] bg-[var(--av-surface)] hover:border-[var(--av-text-muted)]/40 hover:shadow-2xs cursor-pointer"
+          ? "opacity-40 cursor-not-allowed bg-[var(--av-surface-subtle)]"
+          : "cursor-pointer hover:border-[var(--av-brand)]/40 hover:shadow-[var(--av-card-shadow)]"
       }`}
     >
-      <div className="w-full flex items-center justify-between">
-        <span className="text-[11px] font-mono text-[var(--av-text-muted)]">
-          {character.transliteration}
+      <div className="flex items-center justify-between w-full text-xs">
+        <span className="  text-[var(--av-text-muted)] text-[11px]">
+          {character.unicode}
         </span>
-        {isCompleted ? (
-          <Badge variant="success" size="sm">آموخته‌شده</Badge>
-        ) : isLocked ? (
-          <span className="text-[11px] text-[var(--av-text-muted)]">قفل</span>
-        ) : (
-          <Badge variant="default" size="sm">{character.classification === "vowel" ? "واکه" : "همخوان"}</Badge>
-        )}
+        <span
+          className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+            isCompleted
+              ? "bg-emerald-500/10 text-emerald-500"
+              : "bg-[var(--av-surface-subtle)] text-[var(--av-text-muted)]"
+          }`}
+        >
+          {character.classification === "vowel" ? "واکه" : "همخوان"}
+        </span>
       </div>
 
-      <div className="my-6 text-center">
-        <span className="avestan-glyph text-5xl sm:text-6xl text-[var(--av-text)] group-hover:scale-105 transition-transform duration-200">
+      <div className="my-8 flex items-center justify-center">
+        <span className="avestan-glyph text-6xl sm:text-7xl text-[var(--av-text)] group-hover:text-[var(--av-brand)] group-hover:scale-105 transition-all duration-300">
           {character.glyph}
         </span>
       </div>
 
-      <div className="w-full text-center border-t border-[var(--av-border)] pt-3">
-        <span className="text-xs font-semibold text-[var(--av-text)] block truncate">
+      <div className="border-t border-[var(--av-surface-border)] pt-3 flex items-center justify-between">
+        <span className="font-bold text-xs text-[var(--av-text)]">
           {character.name}
         </span>
-        <span className="text-[11px] text-[var(--av-text-muted)] block mt-0.5 font-mono">
-          {character.soundIpa}
-        </span>
+        <div className="flex items-center gap-1   text-xs text-[var(--av-text-muted)]">
+          <span className="text-[var(--av-text)] font-semibold">
+            {character.transliteration}
+          </span>
+          <span>·</span>
+          <span>{character.soundIpa}</span>
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 
-  if (isLocked || !href) {
-    return content;
-  }
+  if (isLocked || !href) return card;
 
   return (
-    <Link href={href} className="block no-underline text-inherit">
-      {content}
+    <Link
+      href={href}
+      className="block no-underline text-inherit focus-visible:outline-none"
+    >
+      {card}
     </Link>
   );
 }

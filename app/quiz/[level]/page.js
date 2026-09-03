@@ -1,8 +1,9 @@
 "use client";
 
-import { use, useState, useEffect } from "react";
+import { use, useState } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { quizzesData } from "@/data/quizzes";
 import { levelsData } from "@/data/levels";
 import {
@@ -11,8 +12,13 @@ import {
 } from "@/lib/storage/progressStore";
 import { updateCardSRS } from "@/lib/srs/repetitionEngine";
 import Button from "@/components/shared/Button";
-import Card from "@/components/shared/Card";
-import Badge from "@/components/shared/Badge";
+import {
+  CheckCircle2,
+  XCircle,
+  ArrowLeft,
+  RotateCcw,
+  BookOpen,
+} from "lucide-react";
 
 export default function QuizLevelPage({ params }) {
   const resolvedParams = use(params);
@@ -90,106 +96,126 @@ export default function QuizLevelPage({ params }) {
     setIsQuizCompleted(true);
   };
 
+  // صفحه کارنامه نهایی آزمون
   if (isQuizCompleted) {
     const finalScore = Math.round((correctAnswersCount / totalQuestions) * 100);
     const passed = finalScore >= levelInfo.requiredScoreToPass;
 
     return (
-      <div className="mx-auto max-w-xl px-4 py-16 sm:px-6 text-center">
-        <Card className="p-8 sm:p-12">
-          <Badge
-            variant={passed ? "success" : "danger"}
-            size="md"
-            className="mb-4"
+      <div className="mx-auto max-w-md px-4 py-20 sm:px-6 text-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 15 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ type: "spring", duration: 0.35 }}
+          className="rounded-3xl border border-[var(--av-surface-border)] bg-[var(--av-surface)] p-8 sm:p-10 shadow-[var(--av-floating-shadow)]"
+        >
+          <span
+            className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold mb-4 ${
+              passed
+                ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+                : "bg-rose-500/10 text-rose-500 border border-rose-500/20"
+            }`}
           >
+            {passed ? (
+              <CheckCircle2 className="h-3.5 w-3.5" />
+            ) : (
+              <XCircle className="h-3.5 w-3.5" />
+            )}
             {passed ? "پذیرفته شدید" : "نیاز به مرور دوباره"}
-          </Badge>
+          </span>
 
-          <h1 className="text-2xl font-bold text-[var(--av-text)]">
+          <h1 className="text-xl font-bold text-[var(--av-text)]">
             نتیجهٔ آزمون {levelInfo.title}
           </h1>
 
           <div className="my-8">
-            <span className="text-5xl font-mono font-extrabold text-[var(--av-accent)]">
+            <span className="  text-6xl font-extrabold text-[var(--av-brand)]">
               {finalScore}٪
             </span>
-            <span className="block text-xs text-[var(--av-text-muted)] mt-2">
+            <span className="block text-xs text-[var(--av-text-secondary)] mt-2">
               {correctAnswersCount} پاسخ درست از {totalQuestions} پرسش
             </span>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 border-t border-[var(--av-border)]">
-            <Link href={`/quiz`}>
-              <Button variant="outline" size="md">
-                فهرست آزمون‌ها
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-4 border-t border-[var(--av-surface-border)]">
+            <Link href="/quiz" className="w-full sm:w-auto">
+              <Button variant="secondary" size="md" className="w-full">
+                <RotateCcw className="h-3.5 w-3.5 ml-1.5" />
+                <span>فهرست آزمون‌ها</span>
               </Button>
             </Link>
-            <Link href={`/learn`}>
-              <Button variant="primary" size="md">
-                ادامهٔ یادگیری
+            <Link href="/learn" className="w-full sm:w-auto">
+              <Button variant="primary" size="md" className="w-full">
+                <span>ادامهٔ یادگیری</span>
+                <ArrowLeft className="h-3.5 w-3.5 mr-1.5" />
               </Button>
             </Link>
           </div>
-        </Card>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
-      {/* سربرگ پرسش */}
-      <div className="flex items-center justify-between border-b border-[var(--av-border)] pb-4 mb-8">
-        <span className="text-xs font-mono text-[var(--av-text-muted)]">
-          پرسش ۰{currentIndex + 1} از ۰{totalQuestions}
+    <div className="mx-auto max-w-xl px-4 py-12 sm:px-6">
+      {/* سربرگ مرحله و شاخص پیشرفت سوال */}
+      <div className="flex items-center justify-between border-b border-[var(--av-surface-border)] pb-4 mb-6">
+        <span className="  text-xs text-[var(--av-text-muted)]">
+          پرسش ۰{currentIndex + 1} / ۰{totalQuestions}
         </span>
-        <span className="text-xs font-bold text-[var(--av-accent)]">
+        <span className="text-xs font-bold text-[var(--av-brand)]">
           {levelInfo.title}
         </span>
       </div>
 
-      {/* صورت پرسش */}
-      <Card className="p-6 sm:p-8 mb-6 text-center">
+      {/* صورت سوال */}
+      <div className="rounded-2xl border border-[var(--av-surface-border)] bg-[var(--av-surface)] p-6 sm:p-8 mb-6 text-center shadow-[var(--av-card-shadow)]">
         <h2 className="text-base sm:text-lg font-bold text-[var(--av-text)] leading-relaxed">
           {currentQuestion.question}
         </h2>
-      </Card>
+      </div>
 
       {/* گزینه‌ها */}
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         {currentQuestion.options.map((opt) => {
+          const isSelected = selectedOptionId === opt.id;
           let optionStyles =
-            "border-[var(--av-border)] bg-[var(--av-surface)] hover:bg-[var(--av-surface-soft)]";
+            "border-[var(--av-surface-border)] bg-[var(--av-surface)] hover:border-[var(--av-brand)]/40";
 
-          if (selectedOptionId === opt.id) {
+          if (isSelected) {
             optionStyles =
-              "border-[var(--av-primary)] bg-[var(--av-primary-soft)] text-[var(--av-text)]";
+              "border-[var(--av-brand)] bg-[var(--av-brand-soft)] text-[var(--av-brand)] font-semibold";
           }
 
           if (isAnswerSubmitted) {
             if (opt.isCorrect) {
               optionStyles =
-                "border-[var(--av-success)] bg-[var(--av-success)]/10 text-[var(--av-success)] font-bold";
-            } else if (selectedOptionId === opt.id) {
+                "border-emerald-500 bg-emerald-500/10 text-emerald-600 font-bold";
+            } else if (isSelected) {
               optionStyles =
-                "border-[var(--av-danger)] bg-[var(--av-danger)]/10 text-[var(--av-danger)]";
+                "border-rose-500 bg-rose-500/10 text-rose-600 font-semibold";
             } else {
-              optionStyles = "opacity-50 border-[var(--av-border)]";
+              optionStyles = "opacity-40 border-[var(--av-surface-border)]";
             }
           }
 
           return (
-            <button
+            <motion.button
               key={opt.id}
               type="button"
               disabled={isAnswerSubmitted}
               onClick={() => handleSelectOption(opt.id)}
-              className={`w-full p-4 rounded-[6px] border text-right transition-all flex items-center justify-between cursor-pointer disabled:cursor-default ${optionStyles}`}
+              whileHover={isAnswerSubmitted ? {} : { scale: 1.01 }}
+              whileTap={isAnswerSubmitted ? {} : { scale: 0.99 }}
+              className={`w-full p-4 rounded-xl border text-right transition-all flex items-center justify-between cursor-pointer disabled:cursor-default ${optionStyles}`}
             >
-              <span className="text-sm font-medium leading-normal">
+              <span className="text-sm">
                 {opt.text.includes("𐬀") ||
                 opt.text.includes("𐬁") ||
                 opt.text.includes("𐬌") ||
-                opt.text.includes("𐬐") ? (
+                opt.text.includes("𐬎") ||
+                opt.text.includes("𐬐") ||
+                opt.text.includes("𐬴") ? (
                   <span className="avestan-glyph text-2xl ml-2">
                     {opt.text}
                   </span>
@@ -197,20 +223,37 @@ export default function QuizLevelPage({ params }) {
                   opt.text
                 )}
               </span>
-            </button>
+
+              {isAnswerSubmitted && opt.isCorrect && (
+                <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+              )}
+              {isAnswerSubmitted && isSelected && !opt.isCorrect && (
+                <XCircle className="h-4 w-4 text-rose-500 shrink-0" />
+              )}
+            </motion.button>
           );
         })}
       </div>
 
-      {/* توضیح بازخورد پس از پاسخ */}
-      {isAnswerSubmitted && (
-        <div className="mt-6 p-4 rounded-[6px] bg-[var(--av-surface-soft)] border border-[var(--av-border)] text-xs text-[var(--av-text)] leading-relaxed">
-          <strong className="text-[var(--av-accent)] block mb-1">توضیح:</strong>
-          {currentQuestion.explanation}
-        </div>
-      )}
+      {/* توضیح بازخورد آواشناختی پس از پاسخ */}
+      <AnimatePresence>
+        {isAnswerSubmitted && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mt-5 p-4 rounded-xl bg-[var(--av-surface-subtle)] border border-[var(--av-surface-border)] text-xs text-[var(--av-text-secondary)] leading-relaxed"
+          >
+            <div className="flex items-center gap-1 text-[var(--av-brand)] font-bold mb-1">
+              <BookOpen className="h-3.5 w-3.5" />
+              <span>توضیح علمی:</span>
+            </div>
+            {currentQuestion.explanation}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* دکمهٔ تایید یا رفتن به سؤال بعد */}
+      {/* دکمه اقدام تایید یا سوال بعدی */}
       <div className="mt-8 flex justify-end">
         {!isAnswerSubmitted ? (
           <Button
@@ -222,10 +265,13 @@ export default function QuizLevelPage({ params }) {
             تأیید پاسخ
           </Button>
         ) : (
-          <Button onClick={handleNextQuestion} variant="accent" size="md">
-            {currentIndex < totalQuestions - 1
-              ? "پرسش پسین ←"
-              : "مشاهدهٔ کارنامهٔ آزمون"}
+          <Button onClick={handleNextQuestion} variant="primary" size="md">
+            <span>
+              {currentIndex < totalQuestions - 1
+                ? "پرسش بعدی"
+                : "مشاهدهٔ نتیجه"}
+            </span>
+            <ArrowLeft className="h-3.5 w-3.5 mr-1" />
           </Button>
         )}
       </div>

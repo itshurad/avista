@@ -1,42 +1,44 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 export default function Button({
   children,
-  variant = "primary",
-  size = "md",
+  variant = "primary", // primary | secondary | ghost
+  size = "md", // sm | md | lg
   className = "",
   disabled = false,
-  type = "button",
   onClick,
+  type = "button",
   ...props
 }) {
-  const baseStyles =
-    "inline-flex items-center justify-center font-medium transition-all duration-150 rounded-[6px] cursor-pointer select-none disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--av-primary)] active:scale-[0.98]";
-
   const sizes = {
-    sm: "h-8 px-3 text-xs gap-1.5",
-    md: "h-10 px-4 text-xs sm:text-sm gap-2",
-    lg: "h-12 px-6 text-sm sm:text-base gap-2.5",
+    sm: "h-8 px-3 text-xs gap-1.5 rounded-full",
+    md: "h-10 px-5 text-xs sm:text-sm gap-2 rounded-full",
+    lg: "h-12 px-7 text-sm sm:text-base gap-2.5 rounded-full",
   };
 
   const variants = {
-    primary: "bg-[var(--av-primary)] text-white hover:opacity-90 shadow-2xs",
+    primary:
+      "bg-[var(--av-brand)] text-white hover:bg-[var(--av-brand-hover)] shadow-sm font-medium",
     secondary:
-      "bg-[var(--av-surface-soft)] text-[var(--av-text)] hover:bg-[var(--av-border)] border border-[var(--av-border)]",
-    outline:
-      "border border-[var(--av-border)] bg-transparent text-[var(--av-text)] hover:bg-[var(--av-surface-soft)]",
+      "bg-[var(--av-surface-subtle)] text-[var(--av-text)] border border-[var(--av-surface-border)] hover:border-[var(--av-brand)]/40 font-medium",
     ghost:
-      "bg-transparent text-[var(--av-text-muted)] hover:text-[var(--av-text)] hover:bg-[var(--av-surface-soft)]",
-    accent: "bg-[var(--av-accent)] text-white hover:opacity-90 shadow-2xs",
+      "bg-transparent text-[var(--av-text-secondary)] hover:text-[var(--av-text)] hover:bg-[var(--av-surface-subtle)] font-medium",
   };
 
   return (
-    <button
+    <motion.button
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`${baseStyles} ${sizes[size]} ${variants[variant]} ${className}`}
+      whileHover={disabled ? {} : { scale: 1.02, y: -1 }}
+      whileTap={disabled ? {} : { scale: 0.98, y: 0 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      className={`relative inline-flex items-center justify-center transition-colors cursor-pointer select-none disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--av-brand)] ${sizes[size]} ${variants[variant]} ${className}`}
       {...props}
     >
       {children}
-    </button>
+    </motion.button>
   );
 }

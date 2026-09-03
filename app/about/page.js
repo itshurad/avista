@@ -1,8 +1,13 @@
-import Card from "@/components/shared/Card";
-import Badge from "@/components/shared/Badge";
 import Link from "next/link";
 import Button from "@/components/shared/Button";
-import { Scroll, Compass, ShieldCheck, Feather } from "lucide-react";
+import {
+  Scroll,
+  Compass,
+  ShieldCheck,
+  Feather,
+  Sparkles,
+  ArrowLeft,
+} from "lucide-react";
 
 export const metadata = {
   title: "دربارهٔ آویستا و تاریخچهٔ دین‌دبیره | آویستا",
@@ -12,97 +17,98 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 space-y-12">
+    <div className="mx-auto max-w-4xl px-4 py-12 sm:py-16 sm:px-6 space-y-12">
       {/* سربرگ اصلی */}
-      <header className="border-b border-[var(--av-border)] pb-8 text-center sm:text-right">
-        <span className="text-xs font-bold tracking-wide text-[var(--av-accent)]">
-          رسالت فرهنگی و علمی
-        </span>
-        <h1 className="text-2xl sm:text-4xl font-extrabold text-[var(--av-text)] mt-1.5">
+      <header className="border-b border-[var(--av-surface-border)] pb-8 text-center sm:text-right">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[var(--av-surface-border)] bg-[var(--av-surface)] text-xs text-[var(--av-brand)] font-medium mb-3 shadow-xs">
+          <Sparkles className="h-3.5 w-3.5" />
+          <span>رسالت فرهنگی و پژوهشی</span>
+        </div>
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--av-text)]">
           دربارهٔ آویستا و شاهکار خط اوستایی
         </h1>
-        <p className="mt-3 text-xs sm:text-sm text-[var(--av-text-muted)] leading-relaxed max-w-2xl">
-          آویستا پروژه‌ای مستقل، متن‌باز و غیرانتفاعی است که با تکیه بر منابع
-          معتبر دانشگاهی، دسترسی به میراث مکتوب اوستا را برای نسل امروز ساده و
-          دلنشین می‌کند.
+        <p className="mt-2 text-xs sm:text-sm text-[var(--av-text-secondary)] leading-relaxed max-w-2xl">
+          آویستا پروژه‌ای مستقل، متن‌باز و غیرانتفاعی است که با تکیه بر مراجع
+          معتبر دانشگاهی، دسترسی به میراث زبان‌های کهن ایرانی را برای نسل امروز
+          آسان و دلنشین می‌سازد.
         </p>
       </header>
 
-      {/* بخش تاریخچهٔ دین‌دبیره */}
+      {/* تاریخچه دین‌دبیره */}
       <section className="space-y-4 text-right">
         <div className="flex items-center gap-2 text-sm font-bold text-[var(--av-text)]">
-          <Scroll className="h-4 w-4 text-[var(--av-accent)]" />
-          <h2>چرا دبیرهٔ اوستایی یکی از شگفتی‌های زبان‌شناسی است؟</h2>
+          <Scroll className="h-4 w-4 text-[var(--av-brand)]" />
+          <h2>چرا دبیرهٔ اوستایی یکی از شگفتی‌های زبان‌شناسی جهان است؟</h2>
         </div>
-        <p className="text-xs sm:text-sm text-[var(--av-text)] leading-relaxed">
-          تا پیش از سده‌های چهارم و پنجم میلادی (عصر ساسانی)، متون دینی و
-          سروده‌های کهن اوستا سینه به سینه و از راه سنت شفاهی توسط موبدان حفظ
-          می‌شد. در دورهٔ شاپور و با احساس خطرِ فراموشی یا تحریف ظرایف آوایی،
-          دانشمندان و موبدان ایرانی دست به ابداع خطی ویژه به نام «دین‌دبیره»
-          زدند.
+        <p className="text-xs sm:text-sm text-[var(--av-text-secondary)] leading-relaxed">
+          تا پیش از سده‌های چهارم و پنجم میلادی (عصر ساسانی)، سروده‌ها و متون
+          کهن اوستا سینه به سینه و از راه سنت شفاهی توسط موبدان حفظ می‌شد. با
+          احساس خطرِ فراموشی یا دگرگونی ظرایف آوایی، دانشمندان و زبان‌شناسان
+          ایرانی دست به ابداع خطی آوانگار به نام «دین‌دبیره» زدند.
         </p>
-        <p className="text-xs sm:text-sm text-[var(--av-text)] leading-relaxed">
-          این الفبا بر پایهٔ خط پهلوی کتابی ولی با رفع ابهامات بزرگ آن ابداع شد.
-          دبیرهٔ اوستایی با داشتن بیش از ۵۰ نشانهٔ صوتی، یکی از کامل‌ترین خط‌های
-          فونتیک جهان باستان است که تفاوت ریزترین واکه‌های کوتاه، کشیده، خیشومی
-          و صامت‌های سایشی و برگشته را با نشانه‌ای ویژه ثبت می‌کند.
+        <p className="text-xs sm:text-sm text-[var(--av-text-secondary)] leading-relaxed">
+          این الفبا بر پایهٔ خط پهلوی کتابی اما با رفع ابهامات بزرگ آن شکل گرفت.
+          دین‌دبیره با داشتن ۵۳ نشانهٔ صوتی مجزا، یکی از کامل‌ترین خط‌های فونتیک
+          جهان باستان است که تفاوت ریزترین واکه‌های کوتاه، کشیده، خیشومی و
+          صامت‌های سایشی و برگشته را با نشانه‌ای مستقل ثبت می‌کند.
         </p>
       </section>
 
-      {/* ارکان آویستا */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <Card className="p-5 space-y-2">
-          <Feather className="h-5 w-5 text-[var(--av-accent)]" />
+      {/* کارت‌های ارزش‌های محوری */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="p-6 rounded-2xl border border-[var(--av-surface-border)] bg-[var(--av-surface)] shadow-[var(--av-card-shadow)] space-y-2">
+          <Feather className="h-5 w-5 text-[var(--av-brand)]" />
           <h3 className="text-sm font-bold text-[var(--av-text)]">
             سادگی و اصالت
           </h3>
-          <p className="text-xs text-[var(--av-text-muted)] leading-relaxed">
-            آموزش بدون پیچیدگی‌های خشک دانشگاهی، اما پایبند به اصول ترانویسی
+          <p className="text-xs text-[var(--av-text-secondary)] leading-relaxed">
+            آموزش بدون پیچیدگی‌های خشک سنتی، همراه با پایبندی به اصول ترانویسی
             استاندارد جهانی.
           </p>
-        </Card>
+        </div>
 
-        <Card className="p-5 space-y-2">
-          <ShieldCheck className="h-5 w-5 text-[var(--av-accent)]" />
+        <div className="p-6 rounded-2xl border border-[var(--av-surface-border)] bg-[var(--av-surface)] shadow-[var(--av-card-shadow)] space-y-2">
+          <ShieldCheck className="h-5 w-5 text-[var(--av-brand)]" />
           <h3 className="text-sm font-bold text-[var(--av-text)]">
             استقلال و متن‌باز بودن
           </h3>
-          <p className="text-xs text-[var(--av-text-muted)] leading-relaxed">
-            کد باز، بدون تبلیغات، بدون پایگاه دادهٔ تجاری و با احترام کامل به
-            حریم خصوصی مخاطب.
+          <p className="text-xs text-[var(--av-text-secondary)] leading-relaxed">
+            کد باز، بدون تبلیغات بازرگانی، بدون پایگاه دادهٔ تجاری و با پاسداری
+            کامل از حریم خصوصی مخاطب.
           </p>
-        </Card>
+        </div>
 
-        <Card className="p-5 space-y-2">
-          <Compass className="h-5 w-5 text-[var(--av-accent)]" />
+        <div className="p-6 rounded-2xl border border-[var(--av-surface-border)] bg-[var(--av-surface)] shadow-[var(--av-card-shadow)] space-y-2">
+          <Compass className="h-5 w-5 text-[var(--av-brand)]" />
           <h3 className="text-sm font-bold text-[var(--av-text)]">
             تکرار فاصله‌دار (SRS)
           </h3>
-          <p className="text-xs text-[var(--av-text-muted)] leading-relaxed">
+          <p className="text-xs text-[var(--av-text-secondary)] leading-relaxed">
             بکارگیری اصول یادگیری شناختی تا نویسه‌های دشوار در بازه‌های زمانی
-            مناسب مرور شوند.
+            متناسب مرور و تثبیت شوند.
           </p>
-        </Card>
+        </div>
       </div>
 
-      {/* اقدام پایانی */}
-      <div className="border-t border-[var(--av-border)] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* بخش دعوت به اقدام پایانی */}
+      <div className="border-t border-[var(--av-surface-border)] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
           <span className="text-xs font-bold text-[var(--av-text)] block">
             آمادهٔ یادگیری نخستین نویسه هستید؟
           </span>
           <span className="text-[11px] text-[var(--av-text-muted)]">
-            از واکه‌های کوتاه و بلند آغاز کنید.
+            از مرحلهٔ واکه‌های کوتاه و بلند بنیادین آغاز کنید.
           </span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <Link href="/learn">
             <Button variant="primary" size="md">
-              ورود به درس‌ها
+              <span>ورود به درس‌ها</span>
+              <ArrowLeft className="h-3.5 w-3.5 mr-1" />
             </Button>
           </Link>
           <Link href="/sources">
-            <Button variant="outline" size="md">
+            <Button variant="secondary" size="md">
               مشاهدهٔ منابع پژوهشی
             </Button>
           </Link>

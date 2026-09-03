@@ -5,72 +5,63 @@
 [data-theme="light"] {
   color-scheme: light;
 
-  /* کاغذ پاپیروس گرم، غنی و استخوانی */
-  --av-bg: oklch(98.2% 0.01 82);
-  --av-surface: oklch(100% 0 0);
-  --av-surface-soft: oklch(96.2% 0.015 82);
-  --av-border: oklch(91% 0.018 80);
+  --av-brand: #006dff;
+  --av-brand-hover: #0056cc;
+  --av-brand-soft: rgba(0, 109, 255, 0.06);
+  --av-brand-glow: rgba(0, 109, 255, 0.12);
 
-  /* دوده و جوهر تحریری کهن */
-  --av-text: oklch(20% 0.02 55);
-  --av-text-muted: oklch(48% 0.03 60);
+  --av-bg: #fcfdfe;
+  --av-surface: #ffffff;
+  --av-surface-subtle: #f8fafc;
+  --av-surface-border: rgba(15, 23, 42, 0.07);
 
-  /* لاجوردی عمیق کتیبه‌ها و فیروزهٔ ساسانی */
-  --av-primary: oklch(36% 0.12 250);
-  --av-primary-soft: oklch(94% 0.04 240);
-  --av-accent: oklch(54% 0.18 40); /* مسی گرم و اخری */
-  --av-accent-soft: oklch(94% 0.05 45);
-  --av-teal: oklch(62% 0.14 195); /* فیروزه‌ای اصیل */
+  --av-text: #090d16;
+  --av-text-secondary: #475569;
+  --av-text-muted: #94a3b8;
 
-  --av-success: oklch(62% 0.15 150);
-  --av-warning: oklch(74% 0.15 75);
-  --av-danger: oklch(58% 0.2 28);
-
-  --background: var(--av-bg);
-  --foreground: var(--av-text);
-  --surface: var(--av-surface);
-  --border: var(--av-border);
-  --radius: 0.6rem;
+  --av-card-shadow:
+    0 4px 20px -2px rgba(15, 23, 42, 0.03),
+    0 2px 6px -1px rgba(15, 23, 42, 0.02);
+  --av-floating-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.06);
 }
 
 .dark,
 [data-theme="dark"] {
   color-scheme: dark;
 
-  /* قیرگون لاجوردی شبانه با کنتراست عمیق */
-  --av-bg: oklch(14% 0.018 260);
-  --av-surface: oklch(19% 0.022 258);
-  --av-surface-soft: oklch(25% 0.025 255);
-  --av-border: oklch(31% 0.02 255);
+  /* پالت سرمه‌ای مدرن بدون سیاهی مطلق */
+  --av-brand: #006dff;
+  --av-brand-hover: #2985ff;
+  --av-brand-soft: #0b2a5c;
+  --av-brand-glow: rgba(0, 109, 255, 0.28);
 
-  --av-text: oklch(95% 0.01 85);
-  --av-text-muted: oklch(68% 0.02 85);
+  --av-bg: #070b12;
+  --av-surface: #0c121c;
+  --av-surface-subtle: #111a27;
+  --av-surface-border: #1b2635;
 
-  --av-primary: oklch(72% 0.14 245);
-  --av-primary-soft: oklch(26% 0.05 250);
-  --av-accent: oklch(70% 0.16 42);
-  --av-accent-soft: oklch(28% 0.06 45);
-  --av-teal: oklch(74% 0.14 195);
+  --av-text: #f8fafc;
+  --av-text-secondary: #a8b3c2;
+  --av-text-muted: #64748b;
 
-  --av-success: oklch(68% 0.15 150);
-  --av-warning: oklch(78% 0.14 75);
-  --av-danger: oklch(64% 0.19 28);
-
-  --background: var(--av-bg);
-  --foreground: var(--av-text);
-  --surface: var(--av-surface);
-  --border: var(--av-border);
+  --av-card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.35), 0 0 0 1px #1b2635;
+  --av-floating-shadow:
+    0 20px 45px -10px rgba(0, 0, 0, 0.55), 0 0 25px -5px rgba(0, 109, 255, 0.1);
 }
 
 body {
   background-color: var(--av-bg);
   color: var(--av-text);
-  font-family: var(--font-vazirmatn), system-ui, sans-serif;
-  line-height: 1.7;
-  letter-spacing: -0.015em;
+  font-family:
+    var(--font-vazirmatn),
+    system-ui,
+    -apple-system,
+    sans-serif;
+  line-height: 1.75;
+  letter-spacing: -0.02em;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
 }
 
 .avestan-glyph {
@@ -78,42 +69,4 @@ body {
   direction: ltr;
   display: inline-block;
   user-select: none;
-}
-
-/* انیمیشن‌های زنده و ارگانیک */
-@keyframes floatSlow {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-8px) rotate(0.4deg);
-  }
-}
-
-@keyframes pulseGlow {
-  0%,
-  100% {
-    opacity: 0.35;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.65;
-    transform: scale(1.04);
-  }
-}
-
-.animate-float {
-  animation: floatSlow 6s ease-in-out infinite;
-}
-
-.animate-glow {
-  animation: pulseGlow 4s ease-in-out infinite;
-}
-
-html,
-body {
-  overflow-x: clip;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
 }

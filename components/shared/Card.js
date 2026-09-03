@@ -7,9 +7,9 @@ export default function Card({
 }) {
   return (
     <Component
-      className={`rounded-[8px] border border-[var(--av-border)] bg-[var(--av-surface)] p-5 transition-all duration-200 ${
+      className={`rounded-2xl border border-[var(--av-surface-border)] bg-[var(--av-surface)] p-6 shadow-[var(--av-card-shadow)] transition-all duration-200 ${
         interactive
-          ? "cursor-pointer hover:border-[var(--av-text-muted)]/40 hover:shadow-2xs active:scale-[0.99]"
+          ? "cursor-pointer hover:border-[var(--av-brand)]/40 hover:-translate-y-0.5 active:scale-[0.99]"
           : ""
       } ${className}`}
       {...props}

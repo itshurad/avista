@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Coffee, Copy, Check, Heart, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Coffee, Copy, Check, X, ShieldCheck } from "lucide-react";
 import Button from "./Button";
 
 export default function DonateModal({ isOpen, onClose }) {
   const [copiedKey, setCopiedKey] = useState(null);
-
-  if (!isOpen) return null;
 
   const handleCopy = (text, key) => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -18,93 +17,79 @@ export default function DonateModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-200">
-      <div
-        className="relative w-full max-w-md rounded-[10px] border border-[var(--av-border)] bg-[var(--av-surface)] p-6 shadow-xl space-y-5 animate-in zoom-in-95 duration-200"
-        role="dialog"
-        aria-modal="true"
-      >
-        {/* بستن */}
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute top-4 left-4 text-[var(--av-text-muted)] hover:text-[var(--av-text)] transition-colors cursor-pointer"
-          aria-label="بستن پنجره"
-        >
-          <X className="h-5 w-5" />
-        </button>
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/50 backdrop-blur-xs"
+          />
 
-        {/* سربرگ مودال */}
-        <div className="text-center space-y-2 pt-2">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[var(--av-accent-soft)] text-[var(--av-accent)] mb-1">
-            <Coffee className="h-6 w-6" />
-          </div>
-          <h3 className="text-lg font-bold text-[var(--av-text)]">
-            مهرانه و همیاری با آویستا
-          </h3>
-          <p className="text-xs text-[var(--av-text-muted)] leading-relaxed px-4">
-            آویستا یک پروژهٔ مستقل، رایگان و بدون آگهی است. همیاری شما به
-            اندازهٔ «یک پیاله چای» به پایداری سرورها و گسترش پژوهش خطوط باستانی
-            یاری می‌رساند.
-          </p>
-        </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            transition={{ type: "spring", duration: 0.25, bounce: 0.2 }}
+            className="relative w-full max-w-md rounded-3xl border border-[var(--av-surface-border)] bg-[var(--av-surface)] p-7 shadow-[var(--av-floating-shadow)] space-y-6 z-10"
+            role="dialog"
+            aria-modal="true"
+          >
+            <button
+              type="button"
+              onClick={onClose}
+              className="absolute top-5 left-5 text-[var(--av-text-muted)] hover:text-[var(--av-text)] transition-colors cursor-pointer"
+            >
+              <X className="h-5 w-5" />
+            </button>
 
-        {/* روش‌های پرداخت */}
-        <div className="space-y-3 pt-2">
-          {/* کارت به کارت */}
-          <div className="p-3.5 rounded-[6px] border border-[var(--av-border)] bg-[var(--av-bg)] flex items-center justify-between">
-            <div className="text-right">
-              <span className="text-[11px] text-[var(--av-text-muted)] block">
-                شماره کارت بانکی (بلوبانک / سامان)
-              </span>
-              <span className="font-mono flex  text-xs font-bold text-[var(--av-text)] tracking-wider">
-                6219 8619 1316 4645
+            <div className="text-center space-y-2 pt-2">
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--av-brand-soft)] text-[var(--av-brand)]">
+                <Coffee className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-bold text-[var(--av-text)]">
+                مهرانه و همیاری با آویستا
+              </h3>
+              <p className="text-xs text-[var(--av-text-secondary)] leading-relaxed px-2">
+                آویستا بدون تبلیغات و کاملاً آزاد توسعه داده می‌شود. همیاری شما مستقیماً صرف نگهداری سرورها و توسعهٔ ابزارهای پردازش خطوط کهن می‌شود.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <div className="p-4 rounded-2xl border border-[var(--av-surface-border)] bg-[var(--av-surface-subtle)] flex items-center justify-between">
+                <div className="text-right">
+                  <span className="text-[11px] text-[var(--av-text-muted)] block">
+                    شماره کارت بانکی (سامان)
+                  </span>
+                  <span className="  text-xs font-bold text-[var(--av-text)] tracking-wider">
+                    6219 8619 1316 4645
+                  </span>
+                </div>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => handleCopy("6219861913164645", "card")}
+                >
+                  {copiedKey === "card" ? (
+                    <Check className="h-3.5 w-3.5 text-emerald-500" />
+                  ) : (
+                    <Copy className="h-3.5 w-3.5" />
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            <div className="pt-2 text-center border-t border-[var(--av-surface-border)]">
+              <span className="text-[11px] text-[var(--av-text-muted)] inline-flex items-center gap-1">
+                <ShieldCheck className="h-3.5 w-3.5 text-[var(--av-brand)]" />
+                توسعه‌یافته به صورت کاملاً متن‌باز و عام‌المنفعه
               </span>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleCopy("6219861000005421", "card")}
-            >
-              {copiedKey === "card" ? (
-                <Check className="h-3.5 w-3.5 text-[var(--av-success)]" />
-              ) : (
-                <Copy className="h-3.5 w-3.5" />
-              )}
-            </Button>
-          </div>
-
-          {/* تتر / رمزارز
-          <div className="p-3.5 rounded-[6px] border border-[var(--av-border)] bg-[var(--av-bg)] flex items-center justify-between">
-            <div className="text-right max-w-[240px]">
-              <span className="text-[11px] text-[var(--av-text-muted)] block">
-                تتر (شبکه TRC20)
-              </span>
-              <span className="font-mono text-[11px] text-[var(--av-text)] truncate block">
-                TYsL9wKQG...7jK8mX2
-              </span>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleCopy("TYsL9wKQG3N8qRt7jK8mX2", "crypto")}
-            >
-              {copiedKey === "crypto" ? (
-                <Check className="h-3.5 w-3.5 text-[var(--av-success)]" />
-              ) : (
-                <Copy className="h-3.5 w-3.5" />
-              )}
-            </Button>
-          </div> */}
+          </motion.div>
         </div>
-
-        <div className="text-center pt-2">
-          <span className="text-[11px] text-[var(--av-text-muted)] flex items-center justify-center gap-1">
-            با مهر و سپاس از همراهی شما{" "}
-            <Heart className="h-3 w-3 text-[var(--av-accent)] fill-[var(--av-accent)]" />
-          </span>
-        </div>
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 }
