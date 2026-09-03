@@ -1,26 +1,119 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+:root,
+.light,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* کاغذ پاپیروس گرم، غنی و استخوانی */
+  --av-bg: oklch(98.2% 0.01 82);
+  --av-surface: oklch(100% 0 0);
+  --av-surface-soft: oklch(96.2% 0.015 82);
+  --av-border: oklch(91% 0.018 80);
+
+  /* دوده و جوهر تحریری کهن */
+  --av-text: oklch(20% 0.02 55);
+  --av-text-muted: oklch(48% 0.03 60);
+
+  /* لاجوردی عمیق کتیبه‌ها و فیروزهٔ ساسانی */
+  --av-primary: oklch(36% 0.12 250);
+  --av-primary-soft: oklch(94% 0.04 240);
+  --av-accent: oklch(54% 0.18 40); /* مسی گرم و اخری */
+  --av-accent-soft: oklch(94% 0.05 45);
+  --av-teal: oklch(62% 0.14 195); /* فیروزه‌ای اصیل */
+
+  --av-success: oklch(62% 0.15 150);
+  --av-warning: oklch(74% 0.15 75);
+  --av-danger: oklch(58% 0.2 28);
+
+  --background: var(--av-bg);
+  --foreground: var(--av-text);
+  --surface: var(--av-surface);
+  --border: var(--av-border);
+  --radius: 0.6rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+.dark,
+[data-theme="dark"] {
+  color-scheme: dark;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* قیرگون لاجوردی شبانه با کنتراست عمیق */
+  --av-bg: oklch(14% 0.018 260);
+  --av-surface: oklch(19% 0.022 258);
+  --av-surface-soft: oklch(25% 0.025 255);
+  --av-border: oklch(31% 0.02 255);
+
+  --av-text: oklch(95% 0.01 85);
+  --av-text-muted: oklch(68% 0.02 85);
+
+  --av-primary: oklch(72% 0.14 245);
+  --av-primary-soft: oklch(26% 0.05 250);
+  --av-accent: oklch(70% 0.16 42);
+  --av-accent-soft: oklch(28% 0.06 45);
+  --av-teal: oklch(74% 0.14 195);
+
+  --av-success: oklch(68% 0.15 150);
+  --av-warning: oklch(78% 0.14 75);
+  --av-danger: oklch(64% 0.19 28);
+
+  --background: var(--av-bg);
+  --foreground: var(--av-text);
+  --surface: var(--av-surface);
+  --border: var(--av-border);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--av-bg);
+  color: var(--av-text);
+  font-family: var(--font-vazirmatn), system-ui, sans-serif;
+  line-height: 1.7;
+  letter-spacing: -0.015em;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.avestan-glyph {
+  font-family: "Noto Sans Avestan", var(--font-vazirmatn), serif;
+  direction: ltr;
+  display: inline-block;
+  user-select: none;
+}
+
+/* انیمیشن‌های زنده و ارگانیک */
+@keyframes floatSlow {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.4deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(1.04);
+  }
+}
+
+.animate-float {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+html,
+body {
+  overflow-x: clip;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
