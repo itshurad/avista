@@ -5,12 +5,12 @@
 [data-theme="light"] {
   color-scheme: light;
 
-  --av-brand: #0759d8;
+  --av-brand: #006DFF;
   --av-brand-hover: #0649b4;
   --av-brand-soft: rgba(7, 89, 216, 0.08);
   --av-brand-glow: rgba(7, 89, 216, 0.18);
 
-  --av-accent: #0b8f86;
+  --av-accent: #0649b4;
   --av-warm: #b97832;
 
   --av-bg: #f7f8f5;
@@ -35,12 +35,12 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --av-brand: #5e9cff;
+  --av-brand: #006DFF;
   --av-brand-hover: #7babff;
   --av-brand-soft: rgba(94, 156, 255, 0.12);
   --av-brand-glow: rgba(94, 156, 255, 0.24);
 
-  --av-accent: #43c8bc;
+  --av-accent: #7babff;
   --av-warm: #d99a51;
 
   --av-bg: #080d12;
