@@ -1,11 +1,91 @@
 @import "tailwindcss";
 
+/* ========================================
+   IranYekanXFaNum
+   ======================================== */
+
+@font-face {
+  font-family: "IRANYekanXFaNum";
+  src: url("/fonts/IranYekan/IRANYekanXFaNum-Thin.woff2") format("woff2");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANYekanXFaNum";
+  src: url("/fonts/IranYekan/IRANYekanXFaNum-UltraLight.woff2") format("woff2");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANYekanXFaNum";
+  src: url("/fonts/IranYekan/IRANYekanXFaNum-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANYekanXFaNum";
+  src: url("/fonts/IranYekan/IRANYekanXFaNum-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANYekanXFaNum";
+  src: url("/fonts/IranYekan/IRANYekanXFaNum-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANYekanXFaNum";
+  src: url("/fonts/IranYekan/IRANYekanXFaNum-DemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANYekanXFaNum";
+  src: url("/fonts/IranYekan/IRANYekanXFaNum-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANYekanXFaNum";
+  src: url("/fonts/IranYekan/IRANYekanXFaNum-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANYekanXFaNum";
+  src: url("/fonts/IranYekan/IRANYekanXFaNum-ExtraBlack.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ========================================
+   Light Theme
+   ======================================== */
+
 :root,
 .light,
 [data-theme="light"] {
   color-scheme: light;
 
-  --av-brand: #006DFF;
+  --av-brand: #006dff;
   --av-brand-hover: #0649b4;
   --av-brand-soft: rgba(7, 89, 216, 0.08);
   --av-brand-glow: rgba(7, 89, 216, 0.18);
@@ -31,11 +111,15 @@
   --av-floating-shadow: 0 28px 70px -32px rgba(16, 24, 32, 0.38);
 }
 
+/* ========================================
+   Dark Theme
+   ======================================== */
+
 .dark,
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --av-brand: #006DFF;
+  --av-brand: #006dff;
   --av-brand-hover: #7babff;
   --av-brand-soft: rgba(94, 156, 255, 0.12);
   --av-brand-glow: rgba(94, 156, 255, 0.24);
@@ -61,6 +145,10 @@
   --av-floating-shadow:
     0 32px 80px -32px rgba(0, 0, 0, 0.9), 0 0 45px -25px rgba(94, 156, 255, 0.2);
 }
+
+/* ========================================
+   Global Reset
+   ======================================== */
 
 * {
   box-sizing: border-box;
@@ -88,7 +176,7 @@ body {
   color: var(--av-text);
 
   font-family:
-    var(--font-vazirmatn),
+    "IRANYekanXFaNum",
     system-ui,
     -apple-system,
     BlinkMacSystemFont,
@@ -99,6 +187,8 @@ body {
   letter-spacing: -0.02em;
 
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
   text-rendering: optimizeLegibility;
 
   transition:
@@ -106,9 +196,22 @@ body {
     color 180ms ease;
 }
 
-::selection {
-  background: var(--av-brand);
-  color: #ffffff;
+/* ========================================
+   Force IranYekan on UI elements
+   ======================================== */
+
+button,
+input,
+textarea,
+select,
+option {
+  font-family:
+    "IRANYekanXFaNum",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 }
 
 button,
@@ -119,26 +222,40 @@ textarea {
   -webkit-tap-highlight-color: transparent;
 }
 
-a {
-  color: inherit;
-}
-
 button,
 a {
   touch-action: manipulation;
 }
 
+a {
+  color: inherit;
+}
+
+/* ========================================
+   Selection
+   ======================================== */
+
+::selection {
+  background: var(--av-brand);
+  color: #ffffff;
+}
+
+/* ========================================
+   Avestan Glyph
+   ======================================== */
+
 .avestan-glyph {
   font-family: "Noto Sans Avestan", "Segoe UI Historic", serif;
 
   direction: ltr;
-
   display: inline-block;
-
   user-select: none;
-
   font-variant-ligatures: none;
 }
+
+/* ========================================
+   Page Grid
+   ======================================== */
 
 .av-page-grid {
   background-image:
@@ -154,16 +271,23 @@ a {
   );
 }
 
+/* ========================================
+   Noise
+   ======================================== */
+
 .av-noise {
   position: absolute;
   inset: 0;
 
   opacity: 0.035;
-
   pointer-events: none;
 
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
 }
+
+/* ========================================
+   Glass
+   ======================================== */
 
 .av-glass {
   background: var(--av-surface);
@@ -176,9 +300,17 @@ a {
   -webkit-backdrop-filter: blur(18px);
 }
 
+/* ========================================
+   Section Rule
+   ======================================== */
+
 .av-section-rule {
   border-top: 1px solid var(--av-surface-border);
 }
+
+/* ========================================
+   Gradient Animation
+   ======================================== */
 
 @keyframes av-gradient {
   0%,
@@ -190,6 +322,10 @@ a {
     background-position: 100% 50%;
   }
 }
+
+/* ========================================
+   Reduced Motion
+   ======================================== */
 
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -204,6 +340,10 @@ a {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ========================================
+   Mobile
+   ======================================== */
 
 @media (max-width: 767px) {
   body {

@@ -53,17 +53,19 @@ export default function DonateModal({ isOpen, onClose }) {
                 مهرانه و همیاری با آویستا
               </h3>
               <p className="text-xs text-[var(--av-text-secondary)] leading-relaxed px-2">
-                آویستا بدون تبلیغات و کاملاً آزاد توسعه داده می‌شود. همیاری شما مستقیماً صرف نگهداری سرورها و توسعهٔ ابزارهای پردازش خطوط کهن می‌شود.
+                آویستا بدون تبلیغات و کاملاً آزاد توسعه داده می‌شود. همیاری شما
+                مستقیماً صرف نگهداری سرورها و توسعهٔ ابزارهای پردازش خطوط کهن
+                می‌شود.
               </p>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3" dir="ltr">
               <div className="p-4 rounded-2xl border border-[var(--av-surface-border)] bg-[var(--av-surface-subtle)] flex items-center justify-between">
-                <div className="text-right">
+                <div className="text-left">
                   <span className="text-[11px] text-[var(--av-text-muted)] block">
                     شماره کارت بانکی (سامان)
                   </span>
-                  <span className="  text-xs font-bold text-[var(--av-text)] tracking-wider">
+                  <span className="text-xs font-bold text-[var(--av-text)] tracking-wider">
                     6219 8619 1316 4645
                   </span>
                 </div>
@@ -79,13 +81,6 @@ export default function DonateModal({ isOpen, onClose }) {
                   )}
                 </Button>
               </div>
-            </div>
-
-            <div className="pt-2 text-center border-t border-[var(--av-surface-border)]">
-              <span className="text-[11px] text-[var(--av-text-muted)] inline-flex items-center gap-1">
-                <ShieldCheck className="h-3.5 w-3.5 text-[var(--av-brand)]" />
-                توسعه‌یافته به صورت کاملاً متن‌باز و عام‌المنفعه
-              </span>
             </div>
           </motion.div>
         </div>
