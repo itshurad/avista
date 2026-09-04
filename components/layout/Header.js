@@ -7,7 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Logo from "./Logo";
 import ThemeToggle from "./ThemeToggle";
 import DonateModal from "@/components/shared/DonateModal";
-import { Menu, X, Coffee, ArrowLeft } from "lucide-react";
+import MobileNav from "./MobileNav";
+import { Menu, X, Coffee, ArrowLeft, Compass } from "lucide-react";
 
 const navItems = [
   { href: "/learn", label: "یادگیری" },
@@ -34,13 +35,18 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-3 sm:top-5 z-40 w-full px-3 sm:px-6">
-        <div className="mx-auto flex h-12 max-w-4xl items-center justify-between rounded-full border border-[var(--av-surface-border)] bg-[var(--av-surface)]/75 px-3 shadow-[var(--av-card-shadow)] backdrop-blur-xl transition-all">
+        <div className="av-glass mx-auto flex h-13 max-w-6xl items-center justify-between rounded-full px-3 shadow-[var(--av-floating-shadow)]">
           {/* لوگو و پیوندها */}
-          <div className="flex items-center gap-4 sm:gap-6">
+          <div className="flex items-center gap-3 sm:gap-6">
             <Logo />
 
+            <div className="hidden lg:flex items-center gap-1 rounded-full bg-[var(--av-surface-subtle)]/70 p-1">
+              <Compass className="mr-1 h-3.5 w-3.5 text-[var(--av-brand)]" />
+              <span className="px-2 text-[10px] font-semibold text-[var(--av-text-muted)]">مسیر یادگیری</span>
+            </div>
+
             <nav
-              className="hidden md:flex items-center gap-0.5"
+              className="hidden lg:flex items-center gap-0.5"
               aria-label="ناوبری اصلی"
               onMouseLeave={() => setHoveredPath(null)}
             >
@@ -116,7 +122,7 @@ export default function Header() {
               whileTap={{ scale: 0.92 }}
               type="button"
               onClick={() => setDrawerOpen(true)}
-              className="md:hidden flex h-8 w-8 items-center justify-center rounded-full text-[var(--av-text)] bg-[var(--av-surface-subtle)] border border-[var(--av-surface-border)] cursor-pointer"
+              className="lg:hidden flex h-8 w-8 items-center justify-center rounded-full text-[var(--av-text)] bg-[var(--av-surface-subtle)] border border-[var(--av-surface-border)] cursor-pointer"
               aria-label="باز کردن منو"
             >
               <Menu className="h-4 w-4" />
@@ -128,7 +134,7 @@ export default function Header() {
       {/* منوی شناور مدرن موبایل */}
       <AnimatePresence>
         {drawerOpen && (
-          <div className="fixed inset-0 z-50 md:hidden p-3 flex flex-col justify-start">
+          <div className="fixed inset-0 z-50 lg:hidden p-3 flex flex-col justify-start">
             {/* لایه محو شیشه‌ای پس‌زمینه */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -203,6 +209,7 @@ export default function Header() {
         )}
       </AnimatePresence>
 
+      <MobileNav />
       <DonateModal isOpen={donateOpen} onClose={() => setDonateOpen(false)} />
     </>
   );

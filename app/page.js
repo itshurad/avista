@@ -17,7 +17,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full pb-6 sm:pb-0">
       <HeroSection />
       <ResumeBanner />
       <LearningJourney />

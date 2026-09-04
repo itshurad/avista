@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { toPng } from "html-to-image";
+import { toBlob, toPng } from "html-to-image";
 import Button from "./Button";
 import { Download, Share2, Sparkles, Check, Copy } from "lucide-react";
 
@@ -14,23 +14,33 @@ export default function ShareCard({ character }) {
 
   const currentUrl = typeof window !== "undefined" ? window.location.href : "";
 
-  // تولید تصویر باکیفیت PNG از پوستر استوری
-  const generateImageBlob = async () => {
+  // استخراج مستقیم Blob بدون استفاده از fetch
+  const generateBlobDirectly = async () => {
     if (!cardRef.current) return null;
-    const dataUrl = await toPng(cardRef.current, {
-      cacheBust: true,
-      pixelRatio: 2.5, // کیفیت شارپ برای صفحه نمایش‌های رتینا و استوری
-    });
-    const res = await fetch(dataUrl);
-    return await res.blob();
+
+    try {
+      const blob = await toBlob(cardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        skipFonts: false,
+      });
+      return blob;
+    } catch (err) {
+      console.error("toBlob error:", err);
+      return null;
+    }
   };
 
-  // اشتراک‌گذاری فایل تصویر در اینستاگرام/تلگرام/سیستم‌عامل
+  // اشتراک‌گذاری مستقیم تصویر در استوری/سیستم‌عامل
   const handleShareStory = async () => {
     setIsGenerating(true);
     try {
-      const blob = await generateImageBlob();
-      if (!blob) return;
+      const blob = await generateBlobDirectly();
+      if (!blob) {
+        // روش جایگزین در صورت خطا در اشتراک مسقیم
+        await handleDownloadImage();
+        return;
+      }
 
       const file = new File([blob], `avista-${character.transliteration}.png`, {
         type: "image/png",
@@ -43,29 +53,31 @@ export default function ShareCard({ character }) {
           text: `آموزش دین‌دبیره در پلتفرم آویستا: ${currentUrl}`,
         });
       } else {
-        // اگر مرورگر دسکتاپ اشتراک مستقیم فایل را پشتیبانی نکرد، تصویر را ذخیره می‌کند
-        handleDownloadImage();
+        await handleDownloadImage();
       }
     } catch (error) {
-      console.error("خطا در اشتراک تصویر:", error);
+      console.error("خطا در هم‌رسانی:", error);
+      await handleDownloadImage();
     } finally {
       setIsGenerating(false);
     }
   };
 
-  // دانلود مستقیم فایل تصویر کارت استوری
+  // دانلود مستقیم فایل تصویر PNG بدون fetch
   const handleDownloadImage = async () => {
     setIsGenerating(true);
     try {
-      const blob = await generateImageBlob();
-      if (!blob) return;
+      if (!cardRef.current) return;
 
-      const url = URL.createObjectURL(blob);
+      const dataUrl = await toPng(cardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+      });
+
       const link = document.createElement("a");
       link.download = `avista-${character.transliteration}-story.png`;
-      link.href = url;
+      link.href = dataUrl;
       link.click();
-      URL.revokeObjectURL(url);
     } catch (error) {
       console.error("خطا در ساخت تصویر:", error);
     } finally {
@@ -94,7 +106,7 @@ export default function ShareCard({ character }) {
         </span>
       </div>
 
-      {/* لوح پوستر استوری با دیزاین ۲۰۲۶ (سوژه برای عکس‌برداری) */}
+      {/* لوح پوستر استوری */}
       <div className="flex justify-center">
         <div
           ref={cardRef}
@@ -106,7 +118,7 @@ export default function ShareCard({ character }) {
             border: "1px solid rgba(255, 255, 255, 0.08)",
           }}
         >
-          {/* هاله نور اتمسفریک آبی برند در مرکز */}
+          {/* هاله نور اتمسفریک آبی برند */}
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full pointer-events-none blur-3xl"
             style={{ background: "rgba(0, 109, 255, 0.25)" }}
@@ -118,7 +130,7 @@ export default function ShareCard({ character }) {
               <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(0,109,255,0.15)] border border-[rgba(0,109,255,0.3)] text-xs font-bold text-[#006DFF]">
                 𐬀
               </span>
-              <span className="text-xs font-bold tracking-tight text-white/90">
+              <span className="text-xs font-bold tracking-tight text-white/90 font-sans">
                 آویستا · Avista
               </span>
             </div>
@@ -147,7 +159,7 @@ export default function ShareCard({ character }) {
             </span>
           </div>
 
-          {/* پانویس پوستر با متادیتا و لینک مرجع */}
+          {/* پانویس پوستر با متادیتا */}
           <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-[11px]">
             <span className="text-white/40 font-mono">
               دین‌دبیره · Avestan Script
@@ -169,9 +181,7 @@ export default function ShareCard({ character }) {
         >
           <Share2 className="h-4 w-4 ml-1.5" />
           <span>
-            {isGenerating
-              ? "در حال آماده‌سازی تصویر..."
-              : "اشتراک تصویر در استوری"}
+            {isGenerating ? "در حال آماده‌سازی..." : "اشتراک تصویر در استوری"}
           </span>
         </Button>
 

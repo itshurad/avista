@@ -6,7 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getStoredProgress } from "@/lib/storage/progressStore";
 import { charactersData } from "@/data/characters";
 import Button from "@/components/shared/Button";
-import { Play, ArrowLeft, CheckCircle2, Sparkles } from "lucide-react";
+import BeamSurface from "@/components/shared/BeamSurface";
+import { Play, ArrowLeft, Sparkles } from "lucide-react";
 
 export default function ResumeBanner() {
   const [lastCharacter, setLastCharacter] = useState(null);
@@ -16,68 +17,49 @@ export default function ResumeBanner() {
     const progress = getStoredProgress();
     const completed = progress?.completedCharacters || [];
     setCompletedCount(completed.length);
-
-    if (completed.length > 0) {
-      // یافتن آخرین نویسهٔ خوانده‌شده یا نخستین نویسه‌ای که هنوز خوانده نشده است
-      const nextChar = charactersData.find((c) => !completed.includes(c.id));
-      const targetChar = nextChar || charactersData[charactersData.length - 1];
-      setLastCharacter(targetChar);
-    }
+    const nextChar = charactersData.find((c) => !completed.includes(c.id));
+    setLastCharacter(nextChar || (completed.length ? charactersData[charactersData.length - 1] : charactersData[0]));
   }, []);
 
   if (!lastCharacter) return null;
 
+  const progressPercent = Math.round((completedCount / 53) * 100);
+
   return (
     <AnimatePresence>
-      <section className="mx-auto max-w-5xl px-4 sm:px-6 pt-4 pb-2">
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-2xl border border-[var(--av-brand)]/20 bg-[var(--av-surface)] p-4 sm:p-5 shadow-[var(--av-card-shadow)] flex flex-col sm:flex-row items-center justify-between gap-4"
-        >
-          {/* هالهٔ ملایم پس‌زمینه */}
-          <div className="absolute right-0 top-0 h-full w-48 bg-[var(--av-brand)]/5 blur-2xl pointer-events-none" />
-
-          {/* بخش اطلاعات و آخرین وضعیت */}
-          <div className="flex items-center gap-3.5 sm:gap-4 w-full sm:w-auto text-right">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--av-brand-soft)] border border-[var(--av-brand)]/20 text-[var(--av-brand)]">
-              <span className="avestan-glyph text-2xl">
-                {lastCharacter.glyph}
-              </span>
-            </div>
-
-            <div>
-              <div className="flex items-center gap-2 mb-0.5">
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--av-brand)]">
-                  <Sparkles className="h-3 w-3" />
-                  ادامهٔ یادگیری
-                </span>
-                <span className="text-[11px] text-[var(--av-text-muted)]  ">
-                  ({completedCount} از ۵۳ نویسه)
-                </span>
+      <section className="mx-auto max-w-6xl px-4 pb-2 sm:px-6">
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
+          <BeamSurface size="line" strength={0.32} duration={6.5} borderRadius={16}>
+            <div className="relative overflow-hidden rounded-2xl border border-[var(--av-surface-border)] bg-[var(--av-surface)] p-4 shadow-[var(--av-card-shadow)] sm:p-5">
+              <div className="absolute inset-y-0 right-0 w-56 bg-[var(--av-brand)]/[0.035] blur-2xl" />
+              <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-[var(--av-brand)]/15 bg-[var(--av-brand-soft)] text-[var(--av-brand)]">
+                    <span className="avestan-glyph text-2xl">{lastCharacter.glyph}</span>
+                  </div>
+                  <div className="min-w-0">
+                    <div className="mb-0.5 flex items-center gap-2 text-[10px] font-bold text-[var(--av-brand)]">
+                      <Sparkles className="h-3 w-3" />
+                      {completedCount ? "ادامهٔ یادگیری" : "شروع پیشنهادی"}
+                    </div>
+                    <h3 className="truncate text-xs font-black text-[var(--av-text)] sm:text-sm">{completedCount ? `گام بعدی: ${lastCharacter.name}` : `از ${lastCharacter.name} شروع کنید`}</h3>
+                    <div className="mt-1 flex items-center gap-2 text-[9px] text-[var(--av-text-muted)]">
+                      <span>{completedCount} / ۵۳ نویسه</span>
+                      <span className="h-1 w-1 rounded-full bg-[var(--av-text-muted)]/50" />
+                      <span>{progressPercent}% مسیر</span>
+                    </div>
+                  </div>
+                </div>
+                <Link href={`/learn/${lastCharacter.id}`} className="w-full sm:w-auto">
+                  <Button variant="primary" size="sm" className="w-full sm:w-auto">
+                    <Play className="h-3 w-3 fill-current ml-1" />
+                    {completedCount ? "ادامه" : "شروع"}
+                    <ArrowLeft className="h-3.5 w-3.5 mr-1" />
+                  </Button>
+                </Link>
               </div>
-
-              <h3 className="text-xs sm:text-sm font-bold text-[var(--av-text)]">
-                گام بعدی: {lastCharacter.name} ({lastCharacter.transliteration})
-              </h3>
             </div>
-          </div>
-
-          {/* دکمهٔ ادامه */}
-          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-            <Link
-              href={`/learn/${lastCharacter.id}`}
-              className="w-full sm:w-auto"
-            >
-              <Button variant="primary" size="sm" className="w-full sm:w-auto">
-                <Play className="h-3 w-3 fill-current ml-1" />
-                <span>پیگیری آموزش</span>
-                <ArrowLeft className="h-3.5 w-3.5 mr-1" />
-              </Button>
-            </Link>
-          </div>
+          </BeamSurface>
         </motion.div>
       </section>
     </AnimatePresence>

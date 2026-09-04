@@ -2,117 +2,102 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { ArrowLeft, BookOpen, Layers, Sparkles, Waves } from "lucide-react";
 import Button from "@/components/shared/Button";
-import { ArrowLeft, Sparkles, BookOpen, Layers } from "lucide-react";
+import BeamSurface from "@/components/shared/BeamSurface";
 
 const heroGlyphs = [
-  {
-    glyph: "𐬀",
-    name: "آ کوتاهه",
-    translit: "a",
-    ipa: "/a/",
-    code: "U+10B00",
-    tag: "واکه بنیادین",
-  },
-  {
-    glyph: "𐬁",
-    name: "آ کشیده",
-    translit: "ā",
-    ipa: "/aː/",
-    code: "U+10B01",
-    tag: "واکه بلند",
-  },
-  {
-    glyph: "𐬌",
-    name: "ای کوتاهه",
-    translit: "i",
-    ipa: "/i/",
-    code: "U+10B0C",
-    tag: "واکه پیشین",
-  },
-  {
-    glyph: "𐬐",
-    name: "کاف",
-    translit: "k",
-    ipa: "/k/",
-    code: "U+10B10",
-    tag: "همخوان نرم‌کامی",
-  },
-  {
-    glyph: "𐬴",
-    name: "ش برگشته",
-    translit: "ṣ̌",
-    ipa: "/ʂ/",
-    code: "U+10B34",
-    tag: "همخوان اصیل",
-  },
+  { glyph: "𐬀", name: "آ کوتاه", translit: "a", ipa: "/a/", code: "U+10B00", tag: "واکه" },
+  { glyph: "𐬁", name: "آ بلند", translit: "ā", ipa: "/aː/", code: "U+10B01", tag: "واکه" },
+  { glyph: "𐬌", name: "ای کوتاه", translit: "i", ipa: "/i/", code: "U+10B0C", tag: "واکه" },
+  { glyph: "𐬐", name: "ک", translit: "k", ipa: "/k/", code: "U+10B10", tag: "همخوان" },
+  { glyph: "𐬴", name: "ش", translit: "š", ipa: "/ʃ/", code: "U+10B34", tag: "همخوان" },
+];
+
+const ambientGlyphs = [
+  ["𐬀", "top-[8%] right-[7%]", "text-7xl"],
+  ["𐬴", "top-[43%] left-[4%]", "text-6xl"],
+  ["𐬐", "bottom-[12%] right-[17%]", "text-5xl"],
+  ["𐬁", "bottom-[8%] left-[23%]", "text-8xl"],
 ];
 
 export default function HeroSection() {
   const [selectedGlyphIndex, setSelectedGlyphIndex] = useState(0);
   const current = heroGlyphs[selectedGlyphIndex];
+  const reduceMotion = useReducedMotion();
 
   return (
-    <section className="relative overflow-hidden pt-12 pb-20 sm:pt-20 sm:pb-32">
-      {/* بافت زمینه مویرگی و هاله ملایم برند */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--av-surface-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--av-surface-border)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_40%,#000_70%,transparent_100%)] opacity-35 pointer-events-none" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-[var(--av-brand)]/10 blur-[140px] pointer-events-none rounded-full" />
+    <section className="relative isolate overflow-hidden pb-18 pt-8 sm:pb-28 sm:pt-14">
+      <div className="av-page-grid absolute inset-0 -z-20 opacity-70" />
+      <div className="av-noise -z-10" />
+      <div className="absolute left-1/2 top-0 -z-10 h-[32rem] w-[42rem] -translate-x-1/2 rounded-full bg-[var(--av-brand)]/10 blur-[120px]" />
+
+      {ambientGlyphs.map(([glyph, position, size], index) => (
+        <motion.span
+          key={`${glyph}-${index}`}
+          aria-hidden="true"
+          animate={reduceMotion ? {} : { y: [0, index % 2 ? -12 : 10, 0], rotate: [0, index % 2 ? -3 : 3, 0] }}
+          transition={{ duration: 6 + index, repeat: Infinity, ease: "easeInOut", delay: index * 0.4 }}
+          className={`avestan-glyph pointer-events-none absolute ${position} ${size} -z-10 select-none text-[var(--av-text)]/[0.035]`}
+        >
+          {glyph}
+        </motion.span>
+      ))}
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
-          {/* ستون متن و اکشن‌ها */}
-          <div className="lg:col-span-7 text-center sm:text-right space-y-6">
+        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_.95fr] lg:gap-14">
+          <div className="text-center sm:text-right">
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[var(--av-surface-border)] bg-[var(--av-surface)]/80 backdrop-blur-xs shadow-xs"
+              transition={{ duration: 0.45 }}
+              className="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--av-brand)]/15 bg-[var(--av-surface)]/70 px-3 py-1.5 text-[10px] font-bold text-[var(--av-brand)] shadow-sm backdrop-blur-md"
             >
-              <Sparkles className="h-3.5 w-3.5 text-[var(--av-brand)]" />
-              <span className="text-xs text-[var(--av-text-secondary)] font-medium">
-                استاندارد بین‌المللی یونیکد · دین‌دبیره
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--av-accent)] opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--av-accent)]" />
               </span>
+              متن‌باز · Unicode · پژوهش‌محور
             </motion.div>
 
             <motion.h1
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.05 }}
-              className="text-4xl sm:text-5xl lg:text-[58px] font-extrabold tracking-tight text-[var(--av-text)] leading-[1.2]"
+              transition={{ duration: 0.65, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+              className="text-[2.55rem] font-black leading-[1.18] tracking-[-0.055em] text-[var(--av-text)] sm:text-6xl lg:text-[4.35rem]"
             >
-              دبیرهٔ اوستایی را
-              <span className="text-[var(--av-brand)] block mt-1.5">
-                علمی، روان و تعاملی بیاموزید.
+              خط اوستایی را
+              <span className="mt-2 block bg-gradient-to-l from-[var(--av-brand)] via-[var(--av-accent)] to-[var(--av-brand)] bg-[length:200%_100%] bg-clip-text text-transparent animate-[av-gradient_6s_ease_infinite]">
+                مثل یک زبان زنده لمس کنید.
               </span>
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-              className="text-base sm:text-lg text-[var(--av-text-secondary)] max-w-xl mx-auto sm:mx-0 leading-relaxed"
+              transition={{ duration: 0.55, delay: 0.14 }}
+              className="mx-auto mt-6 max-w-2xl text-sm leading-8 text-[var(--av-text-secondary)] sm:mx-0 sm:text-base"
             >
-              آویستا مرجع باز و پژوهشی برای آموزش گام‌به‌گام ۵۳ نویسهٔ اوستایی،
-              آواشناسی فونتیک (IPA) و فرهنگ واژگان گاهان است.
+              آویستا یک مسیر تعاملی برای شناخت ۵۳ نویسهٔ رسمی دین‌دبیره، آواشناسی، واژگان گاهانی و تثبیت حافظه است؛ بدون حساب کاربری، بدون حواس‌پرتی.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.15 }}
-              className="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-2"
+              transition={{ duration: 0.5, delay: 0.22 }}
+              className="mt-7 flex flex-wrap items-center justify-center gap-3 sm:justify-start"
             >
               <Link href="/learn">
                 <Button size="lg" variant="primary">
-                  <span>شروع یادگیری</span>
-                  <ArrowLeft className="h-4 w-4 mr-1.5" />
+                  <span>شروع مسیر</span>
+                  <ArrowLeft className="h-4 w-4 mr-1" />
                 </Button>
               </Link>
               <Link href="/dictionary">
                 <Button size="lg" variant="secondary">
-                  <BookOpen className="h-4 w-4 ml-1.5" />
-                  <span>فرهنگ واژگان</span>
+                  <BookOpen className="h-4 w-4 ml-1" />
+                  واژه‌نامه
                 </Button>
               </Link>
             </motion.div>
@@ -120,101 +105,92 @@ export default function HeroSection() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="pt-6 border-t border-[var(--av-surface-border)] flex items-center justify-center sm:justify-start gap-6 text-xs text-[var(--av-text-muted)] font-medium"
+              transition={{ duration: 0.7, delay: 0.35 }}
+              className="mx-auto mt-8 flex max-w-xl flex-wrap items-center justify-center gap-x-6 gap-y-2 border-t border-[var(--av-surface-border)] pt-5 text-[10px] font-semibold text-[var(--av-text-muted)] sm:mx-0 sm:justify-start"
             >
-              <span className="flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                ۵۳ نویسهٔ رسمی
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-[var(--av-brand)]" />
-                مرور هوشمند (SRS)
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-                متن‌باز و آزاد
-              </span>
+              <span>۵۳ نویسهٔ رسمی</span>
+              <span>مرور فاصله‌دار SRS</span>
+              <span>ذخیره‌سازی محلی</span>
             </motion.div>
           </div>
 
-          {/* کنسول کاراکترهای تعاملی زنده */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.45, delay: 0.1 }}
-            className="lg:col-span-5 flex justify-center"
+            initial={{ opacity: 0, scale: 0.96, y: 18 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto w-full max-w-[430px]"
           >
-            <div className="relative w-full max-w-[360px] rounded-3xl border border-[var(--av-surface-border)] bg-[var(--av-surface)]/90 backdrop-blur-md p-7 shadow-[var(--av-floating-shadow)] flex flex-col justify-between">
-              {/* بار بالای کنسول */}
-              <div className="flex items-center justify-between border-b border-[var(--av-surface-border)] pb-4">
-                <div className="flex items-center gap-1.5">
-                  <Layers className="h-4 w-4 text-[var(--av-brand)]" />
-                  <span className="text-xs font-bold text-[var(--av-text)]">
-                    کنسول نویسه
-                  </span>
-                </div>
-                <span className="  text-[11px] text-[var(--av-text-muted)]">
-                  {current.code}
-                </span>
-              </div>
-
-              {/* نمایش مرکزی کاراکتر */}
-              <div className="py-12 flex flex-col items-center justify-center relative min-h-[220px]">
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="h-32 w-32 rounded-full bg-[var(--av-brand)]/8 blur-2xl" />
+            <BeamSurface strength={0.58} duration={5.5}>
+              <div className="overflow-hidden rounded-[1.65rem] border border-[var(--av-surface-border)] bg-[var(--av-surface-solid)] shadow-[var(--av-floating-shadow)]">
+                <div className="flex items-center justify-between border-b border-[var(--av-surface-border)] px-5 py-4">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--av-brand-soft)] text-[var(--av-brand)]">
+                      <Layers className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <div className="text-xs font-extrabold text-[var(--av-text)]">آزمایشگاه نویسه</div>
+                      <div className="text-[9px] text-[var(--av-text-muted)]">تعامل زنده با شکل و آوا</div>
+                    </div>
+                  </div>
+                  <span className="font-mono text-[9px] text-[var(--av-text-muted)]">{current.code}</span>
                 </div>
 
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={current.glyph}
-                    initial={{ opacity: 0, scale: 0.85, y: 10 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.85, y: -10 }}
-                    transition={{ type: "spring", stiffness: 450, damping: 28 }}
-                    className="flex flex-col items-center"
-                  >
-                    <span className="avestan-glyph text-8xl sm:text-9xl text-[var(--av-text)] select-none">
-                      {current.glyph}
-                    </span>
-                    <span className="mt-3 text-xs   text-[var(--av-brand)] font-bold tracking-wider">
-                      {current.name} · {current.translit}
-                    </span>
-                    <span className="text-[11px]   text-[var(--av-text-muted)] mt-0.5">
-                      آواشناسی: {current.ipa}
-                    </span>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
+                <div className="relative flex min-h-[320px] flex-col items-center justify-center px-6 py-10">
+                  <div className="absolute h-48 w-48 rounded-full bg-[var(--av-brand)]/10 blur-3xl" />
+                  <div className="absolute h-36 w-36 rounded-full border border-[var(--av-brand)]/10" />
+                  <div className="absolute h-56 w-56 rounded-full border border-dashed border-[var(--av-surface-border)]" />
 
-              {/* سلکتور تعویض گلیف */}
-              <div className="border-t border-[var(--av-surface-border)] pt-4">
-                <div className="flex items-center justify-between text-[11px] text-[var(--av-text-muted)] mb-2">
-                  <span>نمونه‌ها</span>
-                  <span>{current.tag}</span>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={current.glyph}
+                      initial={{ opacity: 0, scale: 0.72, y: 18, filter: "blur(7px)" }}
+                      animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+                      exit={{ opacity: 0, scale: 0.82, y: -14, filter: "blur(6px)" }}
+                      transition={{ type: "spring", stiffness: 320, damping: 25 }}
+                      className="relative z-10 flex flex-col items-center"
+                    >
+                      <span className="avestan-glyph text-[9rem] leading-none text-[var(--av-text)] drop-shadow-[0_18px_40px_var(--av-brand-glow)] sm:text-[10rem]">
+                        {current.glyph}
+                      </span>
+                      <div className="mt-6 flex items-center gap-2 rounded-full border border-[var(--av-surface-border)] bg-[var(--av-surface-subtle)] px-3 py-1.5">
+                        <span className="text-[10px] font-bold text-[var(--av-text)]">{current.name}</span>
+                        <span className="text-[10px] text-[var(--av-brand)]">{current.translit}</span>
+                        <span className="text-[10px] text-[var(--av-text-muted)]">{current.ipa}</span>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+
+                  <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between text-[9px] text-[var(--av-text-muted)]">
+                    <span className="flex items-center gap-1.5"><Waves className="h-3 w-3 text-[var(--av-accent)]" /> آوای دقیق</span>
+                    <span>{current.tag}</span>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between gap-1.5">
-                  {heroGlyphs.map((item, idx) => {
-                    const isSelected = selectedGlyphIndex === idx;
-                    return (
-                      <button
-                        key={item.glyph}
-                        type="button"
-                        onClick={() => setSelectedGlyphIndex(idx)}
-                        className={`flex-1 h-9 rounded-xl border flex items-center justify-center text-base transition-all cursor-pointer ${
-                          isSelected
-                            ? "border-[var(--av-brand)] bg-[var(--av-brand-soft)] text-[var(--av-brand)] font-bold shadow-xs scale-105"
-                            : "border-[var(--av-surface-border)] bg-[var(--av-surface-subtle)] text-[var(--av-text-secondary)] hover:border-[var(--av-brand)]/40"
-                        }`}
-                        aria-label={item.name}
-                      >
-                        <span className="avestan-glyph">{item.glyph}</span>
-                      </button>
-                    );
-                  })}
+
+                <div className="border-t border-[var(--av-surface-border)] bg-[var(--av-surface-subtle)]/60 p-4">
+                  <div className="mb-2 flex items-center justify-between text-[9px] font-semibold text-[var(--av-text-muted)]">
+                    <span>نمونهٔ تعاملی</span>
+                    <span>{selectedGlyphIndex + 1} / {heroGlyphs.length}</span>
+                  </div>
+                  <div className="grid grid-cols-5 gap-2">
+                    {heroGlyphs.map((item, idx) => {
+                      const active = selectedGlyphIndex === idx;
+                      return (
+                        <button
+                          key={item.glyph}
+                          type="button"
+                          onClick={() => setSelectedGlyphIndex(idx)}
+                          aria-label={`نمایش نویسهٔ ${item.name}`}
+                          aria-pressed={active}
+                          className={`group relative flex h-12 items-center justify-center rounded-xl border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--av-brand)] ${active ? "border-[var(--av-brand)]/40 bg-[var(--av-brand-soft)] text-[var(--av-brand)] shadow-sm" : "border-[var(--av-surface-border)] bg-[var(--av-surface-solid)] text-[var(--av-text-secondary)] hover:-translate-y-0.5 hover:border-[var(--av-brand)]/25"}`}
+                        >
+                          <span className={`avestan-glyph text-xl transition-transform duration-200 ${active ? "scale-110" : "group-hover:scale-110"}`}>{item.glyph}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
-            </div>
+            </BeamSurface>
           </motion.div>
         </div>
       </div>
