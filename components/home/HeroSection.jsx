@@ -130,7 +130,7 @@ export default function HeroSection() {
                 delay: 0.05,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className="text-[1rem] font-black leading-[1.18] tracking-[-0.055em] text-[var(--av-text)] sm:text-3xl lg:text-[3rem]"
+              className="text-[1.7rem] font-black leading-[1.18] tracking-[-0.055em] text-[var(--av-text)] sm:text-3xl lg:text-[3rem]"
             >
               دبیرهٔ اوستایی را
               <span className="mt-2 block bg-gradient-to-l from-[var(--av-brand)] via-[var(--av-accent)] to-[var(--av-brand)] bg-[length:200%_100%] bg-clip-text text-transparent animate-[av-gradient_6s_ease_infinite]">
