@@ -1,40 +1,52 @@
-export default function sitemap() {
-  const baseUrl = "https://avista.ir";
+const baseUrl = "https://avista.ir";
 
+export default function sitemap() {
   return [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified: "2026-09-04",
       changeFrequency: "weekly",
       priority: 1,
     },
+
     {
       url: `${baseUrl}/learn`,
-      lastModified: new Date(),
+      lastModified: "2026-09-04",
       changeFrequency: "weekly",
       priority: 0.9,
     },
+
+    {
+      url: `${baseUrl}/dictionary`,
+      lastModified: "2026-09-04",
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+
     {
       url: `${baseUrl}/quiz`,
-      lastModified: new Date(),
+      lastModified: "2026-09-04",
       changeFrequency: "weekly",
       priority: 0.8,
     },
+
     {
       url: `${baseUrl}/progress`,
-      lastModified: new Date(),
+      lastModified: "2026-09-04",
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+
+    {
+      url: `${baseUrl}/sources`,
+      lastModified: "2026-09-04",
       changeFrequency: "monthly",
       priority: 0.7,
     },
-    {
-      url: `${baseUrl}/sources`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
+
     {
       url: `${baseUrl}/about`,
-      lastModified: new Date(),
+      lastModified: "2026-09-04",
       changeFrequency: "monthly",
       priority: 0.6,
     },

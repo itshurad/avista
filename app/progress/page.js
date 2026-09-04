@@ -186,7 +186,7 @@ export default function ProgressPage() {
       <div className="space-y-4">
         <div className="border-b border-[var(--av-surface-border)] pb-3">
           <h2 className="text-lg font-bold text-[var(--av-text)]">
-            ماتریس کامل الفبای اوستایی
+            ماتریس کامل نویسهی اوستایی
           </h2>
           <span className="text-xs text-[var(--av-text-muted)]">
             وضعیت تسلط بر ۵۳ نویسهٔ رسمی دین‌دبیره

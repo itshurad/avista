@@ -1,6 +1,8 @@
 import Link from "next/link";
+
 import CharacterCard from "@/components/shared/CharacterCard";
 import Reveal from "@/components/shared/Reveal";
+
 import { ArrowLeft, Sparkles } from "lucide-react";
 
 export default function FeaturedCharacters({ characters = [] }) {
@@ -12,13 +14,24 @@ export default function FeaturedCharacters({ characters = [] }) {
             <div>
               <span className="mb-1.5 inline-flex items-center gap-1.5 text-[10px] font-bold text-[var(--av-brand)]">
                 <Sparkles className="h-3.5 w-3.5" />
-                دروازهٔ ورود به الفبا
+                دروازهٔ ورود به نویسه
               </span>
-              <h2 className="text-2xl font-black tracking-tight text-[var(--av-text)] sm:text-3xl">چهار نویسه برای شروع</h2>
-              <p className="mt-1 text-xs text-[var(--av-text-secondary)]">اول شکل را ببینید، بعد صدا را کشف کنید.</p>
+
+              <h2 className="text-2xl font-black tracking-tight text-[var(--av-text)] sm:text-3xl">
+                چهار نویسه برای شروع
+              </h2>
+
+              <p className="mt-1 text-xs text-[var(--av-text-secondary)]">
+                نخست شکل را ببینید، سپس آوای آن را بشناسید.
+              </p>
             </div>
-            <Link href="/learn" className="inline-flex items-center gap-1 self-start text-xs font-bold text-[var(--av-brand)] sm:self-auto">
-              همهٔ ۵۳ نویسه <ArrowLeft className="h-3.5 w-3.5 mr-1" />
+
+            <Link
+              href="/learn"
+              className="inline-flex items-center gap-1 self-start text-xs font-bold text-[var(--av-brand)] sm:self-auto"
+            >
+              همهٔ ۵۳ نویسه
+              <ArrowLeft className="mr-1 h-3.5 w-3.5" />
             </Link>
           </div>
         </Reveal>
