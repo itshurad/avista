@@ -1,14 +1,28 @@
+// app/learn/page.jsx
 "use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { levelsData } from "@/data/levels";
-import { charactersData } from "@/data/characters";
+import {
+  charactersData,
+  avestanNumbers,
+  avestanMarks,
+} from "@/data/characters";
 import { getStoredProgress } from "@/lib/storage/progressStore";
 import CharacterCard from "@/components/shared/CharacterCard";
+import NumberCard from "@/components/learning/NumberCard";
+import PunctuationCard from "@/components/learning/PunctuationCard";
 import Button from "@/components/shared/Button";
-import { Sparkles, ArrowLeft, CheckCircle2 } from "lucide-react";
+import {
+  Sparkles,
+  ArrowLeft,
+  CheckCircle2,
+  Hash,
+  Type,
+  MousePointerClick,
+} from "lucide-react";
 
 export default function LearnPage() {
   const [progress, setProgress] = useState(null);
@@ -18,9 +32,15 @@ export default function LearnPage() {
   }, []);
 
   const completedSet = new Set(progress?.completedCharacters || []);
-  const totalCharacters = charactersData.length;
-  const completedCount = completedSet.size;
-  const percentage = Math.round((completedCount / totalCharacters) * 100);
+
+  const learnableCharacters = charactersData.filter(
+    (c) => c.classification !== "punctuation" && c.classification !== "number",
+  );
+  const totalCharacters = learnableCharacters.length;
+  const completedCount = Array.from(completedSet).filter((id) =>
+    learnableCharacters.some((c) => c.id === id),
+  ).length;
+  const percentage = Math.round((completedCount / totalCharacters) * 100) || 0;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 sm:py-16 sm:px-6 space-y-12">
@@ -30,31 +50,41 @@ export default function LearnPage() {
           <Sparkles className="h-3.5 w-3.5" />
           <span>برنامهٔ آموزشی جامع دین‌دبیره</span>
         </div>
+
         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--av-text)]">
           گام‌های یادگیری دبیرهٔ اوستایی
         </h1>
-        <p className="mt-2 text-xs sm:text-sm text-[var(--av-text-secondary)] max-w-2xl leading-relaxed">
-          هر گام شامل دسته‌ای از نویسه‌ها بر پایهٔ آواشناسی تاریخی است. پس از
-          مرور و ثبت هر دسته، در آزمون همان گام شرکت کنید.
+
+        <p className="mt-2 text-xs sm:text-sm text-[var(--av-text-secondary)] max-w-2xl leading-relaxed mx-auto sm:mx-0">
+          هر گام شامل دسته‌ای از نویسه‌ها بر پایهٔ آواشناسی تاریخی (هوفمان) است.
+          پس از مرور هر بخش، در آزمون ارزیابی شرکت کنید.
         </p>
 
-        {/* نوار پیشرفت مدرن */}
-        <div className="mt-6 max-w-md p-4 rounded-2xl border border-[var(--av-surface-border)] bg-[var(--av-surface)] shadow-[var(--av-card-shadow)]">
-          <div className="flex items-center justify-between text-xs font-medium mb-2">
-            <span className="text-[var(--av-text-secondary)]">
-              پیشرفت کل نویسه‌ها
-            </span>
-            <span className="  font-bold text-[var(--av-brand)]">
-              {completedCount} / {totalCharacters} ({percentage}٪)
-            </span>
+        {/* جعبه نوار پیشرفت و راهنمای کلیک */}
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-2xl">
+          <div className="w-full sm:w-80 p-4 rounded-2xl border border-[var(--av-surface-border)] bg-[var(--av-surface)] shadow-[var(--av-card-shadow)]">
+            <div className="flex items-center justify-between text-xs font-medium mb-2">
+              <span className="text-[var(--av-text-secondary)]">
+                پیشرفت کل نویسه‌ها
+              </span>
+              <span className="font-bold text-[var(--av-brand)]">
+                {completedCount} / {totalCharacters} ({percentage}٪)
+              </span>
+            </div>
+            <div className="h-1.5 w-full rounded-full bg-[var(--av-surface-subtle)] overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${percentage}%` }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="h-full bg-[var(--av-brand)] rounded-full"
+              />
+            </div>
           </div>
-          <div className="h-1.5 w-full rounded-full bg-[var(--av-surface-subtle)] overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${percentage}%` }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="h-full bg-[var(--av-brand)] rounded-full"
-            />
+
+          {/* نشانگر آگاهی‌بخش کلیک روی کارت‌ها */}
+          <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[var(--av-brand-soft)] text-[var(--av-brand)] text-xs border border-[var(--av-brand)]/20 shadow-xs">
+            <MousePointerClick className="h-4 w-4 animate-bounce" />
+            <span>برای ورود به صفحه درس و تلفظ، روی هر کارت کلیک کنید.</span>
           </div>
         </div>
       </div>
@@ -63,8 +93,15 @@ export default function LearnPage() {
       <div className="space-y-10">
         {levelsData.map((level, levelIdx) => {
           const levelChars = charactersData.filter((c) =>
-            level.characterIds.includes(c.id),
+            level.characterIds?.includes(c.id),
           );
+          const levelNumbers = avestanNumbers.filter((n) =>
+            level.numberIds?.includes(n.id),
+          );
+          const levelPunctuation = avestanMarks.filter((p) =>
+            level.punctuationIds?.includes(p.id),
+          );
+
           const isLevelComplete =
             levelChars.length > 0 &&
             levelChars.every((c) => completedSet.has(c.id));
@@ -82,8 +119,8 @@ export default function LearnPage() {
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--av-surface-border)] pb-6">
                 <div>
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className="  text-xs font-bold text-[var(--av-brand)] bg-[var(--av-brand-soft)] px-2.5 py-0.5 rounded-full">
+                  <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <span className="text-xs font-bold text-[var(--av-brand)] bg-[var(--av-brand-soft)] px-2.5 py-0.5 rounded-full">
                       گام ۰{level.id}
                     </span>
                     {isLevelComplete && (
@@ -92,7 +129,7 @@ export default function LearnPage() {
                         تکمیل‌شده
                       </span>
                     )}
-                    <span className="text-[11px]   text-[var(--av-text-muted)]">
+                    <span className="text-[11px] text-[var(--av-text-muted)]  ">
                       {levelCompletedCount} از {levelChars.length} نویسه
                     </span>
                   </div>
@@ -117,17 +154,65 @@ export default function LearnPage() {
                 </div>
               </div>
 
-              {/* شبکه نویسه‌های این مرحله */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {levelChars.map((char) => (
-                  <CharacterCard
-                    key={char.id}
-                    character={char}
-                    isCompleted={completedSet.has(char.id)}
-                    href={`/learn/${char.id}`}
-                  />
-                ))}
-              </div>
+              {/* بخش حروف اصلی */}
+              {levelChars.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-bold text-[var(--av-text-secondary)] mb-3 flex items-center gap-2">
+                    <Type className="h-4 w-4 text-[var(--av-brand)]" />
+                    حروف این مرحله
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {levelChars.map((char) => (
+                      <CharacterCard
+                        key={char.id}
+                        character={char}
+                        isCompleted={completedSet.has(char.id)}
+                        href={`/learn/${char.id}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* بخش اعداد */}
+              {levelNumbers.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-bold text-[var(--av-text-secondary)] mb-3 mt-6 flex items-center gap-2">
+                    <Hash className="h-4 w-4 text-amber-500" />
+                    اعداد این مرحله
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {levelNumbers.map((num) => (
+                      <NumberCard
+                        key={num.id}
+                        number={num}
+                        isCompleted={completedSet.has(num.id)}
+                        href={`/learn/${num.id}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* بخش علائم نگارشی */}
+              {levelPunctuation.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-bold text-[var(--av-text-secondary)] mb-3 mt-6 flex items-center gap-2">
+                    <Type className="h-4 w-4 text-purple-500" />
+                    علائم نگارشی این مرحله
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {levelPunctuation.map((punct) => (
+                      <PunctuationCard
+                        key={punct.id}
+                        punctuation={punct}
+                        isCompleted={completedSet.has(punct.id)}
+                        href={`/learn/${punct.id}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
             </motion.div>
           );
         })}

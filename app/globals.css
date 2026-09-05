@@ -350,3 +350,677 @@ a {
     padding-bottom: 5.25rem;
   }
 }
+
+/* ========================================
+   Avestan keyboard — 2026 mobile-first typing surface
+   ======================================== */
+.av-keyboard {
+  --av-keyboard-bg: #e9eaee;
+  --av-key-bg: #fbfbfc;
+  --av-key-input: #ffffff;
+  --av-key-border: rgba(32, 33, 36, 0.08);
+  --av-key-text: #202124;
+  --av-key-secondary: #747a82;
+  position: relative;
+  width: 100%;
+  color: var(--av-key-text);
+}
+
+.dark .av-keyboard,
+[data-theme="dark"] .av-keyboard {
+  --av-keyboard-bg: #202124;
+  --av-key-bg: #303134;
+  --av-key-input: #202124;
+  --av-key-border: rgba(255, 255, 255, 0.08);
+  --av-key-text: #f1f3f4;
+  --av-key-secondary: #bdc1c6;
+}
+
+.av-keyboard-shell {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--av-key-border);
+  border-radius: 22px;
+  background: var(--av-keyboard-bg);
+  box-shadow:
+    0 24px 70px -38px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.35) inset;
+}
+
+.av-keyboard-toolbar {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 5px;
+  border-bottom: 1px solid var(--av-key-border);
+  background: color-mix(in srgb, var(--av-keyboard-bg) 92%, white 8%);
+}
+
+.av-toolbar-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--av-key-secondary);
+  transition:
+    background 0.16s ease,
+    color 0.16s ease,
+    transform 0.12s ease;
+}
+.av-toolbar-icon:hover,
+.av-toolbar-icon.is-active {
+  background: color-mix(in srgb, var(--av-key-bg) 86%, var(--av-brand) 14%);
+  color: var(--av-key-text);
+}
+.av-toolbar-icon:active {
+  transform: scale(0.94);
+}
+.av-toolbar-icon:disabled {
+  opacity: 0.35;
+}
+
+.av-suggestion-strip {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.av-suggestion-strip::-webkit-scrollbar {
+  display: none;
+}
+.av-suggestion {
+  display: grid;
+  min-width: 42px;
+  height: 38px;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--av-key-text);
+}
+.av-suggestion:active {
+  background: var(--av-key-bg);
+}
+.av-suggestion .avestan-glyph {
+  font-size: 21px;
+}
+.av-keyboard-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  font-size: 9px;
+  color: var(--av-key-secondary);
+}
+
+.av-keyboard-tools {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  padding: 3px 6px 4px;
+  border-bottom: 1px solid var(--av-key-border);
+  scrollbar-width: none;
+}
+.av-keyboard-tools::-webkit-scrollbar {
+  display: none;
+}
+.av-keyboard-tool {
+  display: inline-flex;
+  height: 34px;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  padding: 0 11px;
+  border-radius: 10px;
+  color: var(--av-key-secondary);
+  font-size: 9px;
+  font-weight: 700;
+}
+.av-keyboard-tool svg {
+  width: 15px;
+  height: 15px;
+}
+.av-keyboard-tool:hover {
+  background: var(--av-key-bg);
+  color: var(--av-key-text);
+}
+
+.av-keyboard-editor {
+  padding: 7px 7px 5px;
+}
+.av-keyboard-textarea {
+  display: block;
+  width: 100%;
+  min-height: 92px;
+  resize: none;
+  border: 1px solid var(--av-key-border);
+  border-radius: 13px;
+  padding: 12px 14px 9px;
+  background: var(--av-key-input);
+  color: var(--av-key-text);
+  caret-color: var(--av-brand);
+  outline: none;
+  font-family: "Noto Sans Avestan", "Segoe UI Historic", serif;
+  font-size: 22px;
+  line-height: 1.85;
+  text-align: right;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) inset;
+}
+.av-keyboard-textarea::placeholder {
+  color: var(--av-key-secondary);
+  opacity: 0.8;
+  font-family: "IRANYekanXFaNum", system-ui, sans-serif;
+  font-size: 10px;
+}
+.av-keyboard-textarea:focus {
+  border-color: color-mix(in srgb, var(--av-brand) 45%, var(--av-key-border));
+  box-shadow: 0 0 0 3px var(--av-brand-soft);
+}
+.av-editor-meta {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 4px 0;
+  font-size: 7px;
+  color: var(--av-key-secondary);
+}
+
+.av-keyboard-body {
+  position: relative;
+  padding: 4px 6px 6px;
+}
+.av-keyboard-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.av-keyboard-row {
+  display: grid;
+  gap: 4px;
+}
+.av-row-1 {
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+}
+.av-row-2 {
+  width: 94%;
+  margin-inline: auto;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+}
+.av-row-3 {
+  width: 88%;
+  margin-inline: auto;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+
+.av-key {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: var(--av-key-bg);
+  color: var(--av-key-text);
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.22),
+    0 1px 0 rgba(255, 255, 255, 0.45) inset;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+  transition:
+    background 0.12s ease,
+    box-shadow 0.12s ease;
+}
+.av-key:hover {
+  background: color-mix(in srgb, var(--av-key-bg) 92%, var(--av-brand) 8%);
+}
+.av-key:active {
+  box-shadow:
+    0 0 0 rgba(0, 0, 0, 0),
+    inset 0 1px 2px rgba(0, 0, 0, 0.16);
+}
+.av-key:focus-visible {
+  outline: 2px solid var(--av-brand);
+  outline-offset: 2px;
+}
+.av-key .avestan-glyph {
+  font-family: "Noto Sans Avestan", "Segoe UI Historic", serif;
+  direction: ltr;
+  display: inline-block;
+  user-select: none;
+  font-variant-ligatures: none;
+}
+
+.av-keyboard-bottom-row {
+  display: grid;
+  grid-template-columns: 0.9fr 0.78fr 2.35fr 0.72fr 0.9fr;
+  gap: 4px;
+  margin-top: 5px;
+}
+.av-key-special {
+  flex-direction: column;
+  gap: 1px;
+  font-size: 7px;
+  color: var(--av-key-secondary);
+}
+.av-key-number {
+  font-size: 9px;
+  font-weight: 800;
+}
+.av-key-space {
+  font-size: 9px;
+  color: var(--av-key-secondary);
+}
+.av-key-backspace {
+  color: var(--av-key-text);
+}
+.av-punctuation-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.av-secondary-panel {
+  padding: 2px 0 0;
+}
+.av-secondary-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2px 6px;
+  font-size: 9px;
+  color: var(--av-key-secondary);
+}
+.av-secondary-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--av-brand);
+  font-weight: 800;
+}
+.av-secondary-grid {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 4px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 2px;
+}
+.av-number-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+}
+.av-ligatures {
+  margin-top: 7px;
+  padding: 7px;
+  border-radius: 10px;
+  background: color-mix(
+    in srgb,
+    var(--av-keyboard-bg) 70%,
+    var(--av-key-bg) 30%
+  );
+}
+.av-ligatures > span {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 8px;
+  color: var(--av-key-secondary);
+}
+
+.av-longpress-popover {
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  bottom: 61px;
+  display: flex;
+  gap: 3px;
+  max-width: calc(100% - 20px);
+  padding: 5px;
+  transform: translateX(-50%);
+  border: 1px solid var(--av-key-border);
+  border-radius: 10px;
+  background: var(--av-keyboard-bg);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+.av-longpress-key {
+  display: grid;
+  min-width: 44px;
+  height: 45px;
+  place-items: center;
+  border-radius: 7px;
+  background: var(--av-key-bg);
+  color: var(--av-key-text);
+}
+.av-longpress-key .avestan-glyph {
+  font-size: 23px;
+}
+.av-keyboard-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 2px 10px 7px;
+  font-size: 7px;
+  color: var(--av-key-secondary);
+}
+
+/* ========================================
+   Keyboard page chrome
+   ======================================== */
+.av-keyboard-page-badge,
+.av-section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--av-brand);
+  font-size: 10px;
+  font-weight: 800;
+}
+.av-keyboard-page-badge {
+  padding: 6px 10px;
+  border: 1px solid var(--av-brand-soft);
+  border-radius: 999px;
+  background: var(--av-brand-soft);
+}
+.av-keyboard-intro {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 18px 11px;
+}
+.av-keyboard-intro h2 {
+  margin: 4px 0 0;
+  font-size: 17px;
+  font-weight: 900;
+}
+.av-keyboard-intro p {
+  margin: 2px 0 0;
+  font-size: 9px;
+  color: var(--av-text-muted);
+}
+.av-keyboard-intro-tip {
+  max-width: 250px;
+  padding: 8px 10px;
+  border: 1px solid var(--av-surface-border);
+  border-radius: 10px;
+  background: var(--av-surface-subtle);
+  color: var(--av-text-muted);
+  font-size: 8px;
+  line-height: 1.7;
+}
+
+/* ========================================
+   Postcard studio
+   ======================================== */
+.av-postcard-stage {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0;
+}
+.av-postcard {
+  --postcard-bg: #e9e8e2;
+  --postcard-ink: #14202a;
+  --postcard-line: rgba(20, 32, 42, 0.16);
+  --postcard-accent: #71808b;
+  position: relative;
+  width: min(100%, 760px);
+  aspect-ratio: 1.72 / 1;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 48% 52%;
+  direction: ltr;
+  border: 1px solid color-mix(in srgb, var(--postcard-accent) 22%, transparent);
+  border-radius: 17px;
+  background: var(--postcard-bg);
+  color: var(--postcard-ink);
+  box-shadow:
+    0 25px 60px -38px rgba(15, 24, 32, 0.55),
+    0 1px 0 rgba(255, 255, 255, 0.55) inset;
+}
+.av-postcard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.78' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+.av-postcard-image {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.06);
+}
+.av-postcard-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.av-postcard-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 72%, var(--postcard-bg) 100%);
+  opacity: 0.32;
+}
+.av-postcard-writing {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  padding: 6.5% 7% 6%;
+  display: flex;
+  flex-direction: column;
+  direction: rtl;
+}
+.av-postcard-logo {
+  align-self: flex-start;
+  width: clamp(25px, 5.5%, 42px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+.av-postcard-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.av-postcard-lines {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: 4%;
+  overflow: hidden;
+}
+.av-postcard-line {
+  min-height: 11.8%;
+  overflow: hidden;
+  border-bottom: 1px solid var(--postcard-line);
+  padding: 1.5% 0 1%;
+  white-space: nowrap;
+  text-overflow: clip;
+  text-align: right;
+  direction: rtl;
+  font-family: "Noto Sans Avestan", "Segoe UI Historic", serif;
+  font-size: clamp(8px, 1.22vw, 12px);
+  font-weight: 500;
+  line-height: 1.45;
+}
+.av-postcard-line:empty::after {
+  content: "";
+}
+
+.av-postcard-thumb {
+  position: relative;
+  width: 82px;
+  height: 52px;
+  flex: 0 0 auto;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: var(--av-surface-subtle);
+  opacity: 0.72;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    border-color 0.18s ease;
+}
+.av-postcard-thumb:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+.av-postcard-thumb.is-selected {
+  border-color: var(--av-brand);
+  opacity: 1;
+  box-shadow: 0 6px 18px -10px var(--av-brand-glow);
+}
+.av-postcard-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.av-postcard-loading,
+.av-postcard-empty {
+  border: 1px dashed var(--av-surface-border);
+  border-radius: 18px;
+  background: var(--av-surface);
+  padding: 50px 20px;
+  text-align: center;
+  color: var(--av-text-muted);
+  font-size: 11px;
+}
+.av-postcard-empty svg {
+  color: var(--av-brand);
+}
+
+@media (max-width: 640px) {
+  .av-keyboard-shell {
+    border-radius: 17px;
+  }
+  .av-keyboard-intro {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    padding: 13px 13px 9px;
+  }
+  .av-keyboard-intro-tip {
+    max-width: none;
+    width: 100%;
+  }
+  .av-keyboard-textarea {
+    min-height: 82px;
+    font-size: 20px;
+  }
+  .av-keyboard-row {
+    gap: 3px;
+  }
+  .av-keyboard-body {
+    padding-inline: 4px;
+  }
+  .av-row-2 {
+    width: 97%;
+  }
+  .av-row-3 {
+    width: 94%;
+  }
+  .av-keyboard-bottom-row {
+    gap: 3px;
+  }
+  .av-punctuation-row {
+    gap: 3px;
+  }
+  .av-postcard {
+    width: 100%;
+    border-radius: 13px;
+  }
+  .av-postcard-writing {
+    padding: 6% 6% 5%;
+  }
+  .av-postcard-line {
+    font-size: 8px;
+  }
+  .av-postcard-thumb {
+    width: 72px;
+    height: 46px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .av-key,
+  .av-postcard-thumb,
+  .av-toolbar-icon {
+    transition: none;
+  }
+}
+/* ============================================================
+   AVISTA 2026 GLASS KEYBOARD & POSTCARD TOKENS
+   ============================================================ */
+
+.av-glass-panel {
+  background: rgba(12, 18, 28, 0.72);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 24px 48px -12px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] .av-glass-panel {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow:
+    0 20px 40px -10px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+}
+
+.av-glass-key {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  color: var(--av-text);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="light"] .av-glass-key {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow:
+    0 2px 6px rgba(15, 23, 42, 0.04),
+    inset 0 1px 0 #ffffff;
+}
+
+.av-glass-key:hover {
+  border-color: rgba(0, 109, 255, 0.4);
+  background: rgba(0, 109, 255, 0.08);
+  box-shadow: 0 4px 14px rgba(0, 109, 255, 0.2);
+}
+
+.av-glass-key-special {
+  background: rgba(0, 109, 255, 0.1);
+  border: 1px solid rgba(0, 109, 255, 0.25);
+  color: var(--av-brand);
+}
+
+.av-glass-key-special:hover {
+  background: var(--av-brand);
+  color: #ffffff;
+}

@@ -13,6 +13,7 @@ import { Menu, X, Coffee, ArrowLeft, Compass } from "lucide-react";
 const navItems = [
   { href: "/learn", label: "یادگیری" },
   { href: "/dictionary", label: "واژه‌نامه" },
+  { href: "/keyboard", label: "صفحه‌کلید" },
   { href: "/quiz", label: "آزمون‌ها" },
   { href: "/progress", label: "کارنامه" },
   { href: "/sources", label: "منابع" },

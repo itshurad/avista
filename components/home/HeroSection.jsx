@@ -240,7 +240,7 @@ export default function HeroSection() {
                     </div>
                   </div>
 
-                  <span className="whitespace-nowrap font-mono text-[9px] text-[var(--av-text-muted)]">
+                  <span className="whitespace-nowrap   text-[9px] text-[var(--av-text-muted)]">
                     {current.code}
                   </span>
                 </div>

@@ -90,7 +90,7 @@ function DictionaryContent() {
       <div className="border-b border-[var(--av-surface-border)] pb-8 text-center sm:text-right">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[var(--av-surface-border)] bg-[var(--av-surface)] text-xs text-[var(--av-brand)] font-medium mb-3 shadow-xs">
           <Sparkles className="h-3.5 w-3.5" />
-          <span>پیکرهٔ جامع 4000 واژهٔ گاهانی و یسنا</span>
+          <span>پیکرهٔ جامع 65 واژهٔ گاهانی و یسنا</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--av-text)]">
           فرهنگ واژگان اوستایی

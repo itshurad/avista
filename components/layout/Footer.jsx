@@ -59,6 +59,11 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <Link href="/keyboard" className="hover:text-[var(--av-text)]">
+                    صفحه‌کلید اوستایی
+                  </Link>
+                </li>
+                <li>
                   <Link
                     href="/progress"
                     className="hover:text-[var(--av-text)]"
