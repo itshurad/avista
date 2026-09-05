@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Download, ImagePlus, Palette } from "lucide-react";
+import { Download, ImagePlus, Palette, ChevronLeft } from "lucide-react";
 import { toPng } from "html-to-image";
 import AvestanKeyboard from "@/components/keyboard/AvestanKeyboard";
 import Postcard from "@/components/postcard/Postcard";
@@ -207,30 +207,43 @@ export default function KeyboardPage() {
     : null;
 
   return (
-    <div className="relative overflow-hidden py-6 sm:py-12">
-      {/* هاله ملایم پس‌زمینه */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[250px] bg-[var(--av-brand)]/8 blur-[120px] pointer-events-none rounded-full" />
+    <div className="relative overflow-hidden py-4 sm:py-10">
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] sm:w-[500px] h-[200px] sm:h-[250px] bg-[var(--av-brand)]/8 blur-[100px] pointer-events-none rounded-full" />
 
-      <div className="relative mx-auto max-w-3xl px-3 sm:px-6 space-y-8">
-        {/* سربرگ خلوت و مدرن */}
-        <div className="text-center space-y-1.5">
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--av-text)]">
-            استودیوی خط اوستایی
+      <div className="relative mx-auto max-w-2xl px-2.5 sm:px-6 space-y-6 sm:space-y-8">
+        {/* سربرگ */}
+        {/* سربرگ استودیو خط اوستایی */}
+        <div className="relative text-center space-y-2 sm:space-y-3 pt-2 pb-1">
+          {/* نشان کپسولی شناور */}
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[var(--av-surface-border)] bg-[var(--av-surface)]/70 backdrop-blur-md text-[11px] font-medium text-[var(--av-brand)] shadow-2xs">
+            <span className="flex h-1.5 w-1.5 rounded-full bg-[var(--av-brand)] animate-pulse" />
+            <span>استودیوی خوش‌نویسی و کارت‌پستال</span>
+          </div>
+
+          {/* تیتر اصلی */}
+          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[var(--av-text)] leading-tight">
+            کارگاه نگارش{" "}
+            <span className="text-[var(--av-brand)] inline-block">
+              دین‌دبیره
+            </span>
           </h1>
-          <p className="text-xs text-[var(--av-text-secondary)]">
-            تایپ کنید و همزمان کارت‌پستال کلاسیک خود را تحویل بگیرید.
+
+          {/* توضیح کوتاه و متوازن */}
+          <p className="max-w-md mx-auto text-xs sm:text-sm text-[var(--av-text-secondary)] leading-relaxed">
+            با صفحه‌کلید تعاملی بنویسید و پیام خود را روی تمبر و کارت‌پستال‌های
+            تاریخی دریافت کنید.
           </p>
         </div>
 
-        {/* کیبورد بهینه‌شده موبایل */}
+        {/* کیبورد کامپکت */}
         <AvestanKeyboard onTextChange={setText} />
 
-        {/* بخش پیش‌نمایش و دانلود کارت‌پستال */}
-        <section className="pt-6 border-t border-[var(--av-surface-border)] space-y-4">
+        {/* بخش کارت‌پستال */}
+        <section className="pt-4 border-t border-[var(--av-surface-border)] space-y-3.5">
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5">
-              <Palette className="h-4 w-4 text-[var(--av-brand)]" />
-              <h2 className="text-sm font-bold text-[var(--av-text)]">
+            <div className="flex items-center gap-1">
+              <Palette className="h-3.5 w-3.5 text-[var(--av-brand)]" />
+              <h2 className="text-xs sm:text-sm font-bold text-[var(--av-text)]">
                 کارت‌پستال تمبردار
               </h2>
             </div>
@@ -241,58 +254,72 @@ export default function KeyboardPage() {
                 size="sm"
                 onClick={() => downloadCard(selectedCard)}
                 disabled={downloading}
+                className="h-8 px-3 text-xs"
               >
-                <Download className="h-3.5 w-3.5 ml-1" />
+                <Download className="h-3 w-3 ml-1" />
                 <span>{downloading ? "در حال ساخت…" : "دانلود کارت"}</span>
               </Button>
             )}
           </div>
 
-          {/* استایل‌های کارت */}
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-[var(--av-text-muted)]">طرح کاغذ:</span>
-            <div className="flex items-center gap-1 bg-[var(--av-surface-subtle)] p-0.5 rounded-full border border-[var(--av-surface-border)]">
-              {[
-                { id: "classic", label: "کلاسیک" },
-                { id: "heritage", label: "عتیقه" },
-                { id: "modern", label: "تیره" },
-                { id: "fantasy", label: "فانتزی" },
-                { id: "royal", label: "سلطنتی" },
-                { id: "festive", label: "جشن" },
-                { id: "night", label: "شب‌ستاره" },
-                { id: "botanical", label: "گیاهی" },
-              ].map((t) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() => setPostcardTheme(t.id)}
-                  className={`px-2.5 py-0.5 rounded-full text-[11px] whitespace-nowrap transition-all cursor-pointer ${
-                    postcardTheme === t.id
-                      ? "bg-[var(--av-brand)] text-white font-bold"
-                      : "text-[var(--av-text-secondary)]"
-                  }`}
-                >
-                  {t.label}
-                </button>
-              ))}
+          {/* بخش انتخاب پوسته با برچسب ثابت و اسکرول مجزا و واضح برای آیتم‌ها */}
+          <div className="flex items-center gap-2 p-1 rounded-2xl bg-[var(--av-surface-subtle)] border border-[var(--av-surface-border)]">
+            <span className="text-[11px] font-medium text-[var(--av-text-secondary)] shrink-0 px-1.5 flex items-center gap-1">
+              <span>پوسته:</span>
+              <ChevronLeft className="h-3 w-3 text-[var(--av-text-muted)] sm:hidden" />
+            </span>
+
+            {/* محفظهٔ اختصاصی اسکرول‌دار همراه با سایه‌های راهنما */}
+            <div className="relative flex-1 overflow-hidden">
+              <div
+                className="flex items-center gap-1 overflow-x-auto py-1 px-1 scroll-smooth overscroll-x-contain"
+                style={{
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "var(--av-brand) transparent",
+                }}
+              >
+                {[
+                  { id: "classic", label: "کلاسیک" },
+                  { id: "heritage", label: "عتیقه" },
+                  { id: "modern", label: "تیره" },
+                  { id: "fantasy", label: "فانتزی" },
+                  { id: "royal", label: "سلطنتی" },
+                  { id: "festive", label: "جشن" },
+                  { id: "night", label: "شب" },
+                  { id: "botanical", label: "گیاهی" },
+                ].map((t) => (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => setPostcardTheme(t.id)}
+                    className={`px-3 py-1 rounded-full text-[11px] whitespace-nowrap shrink-0 transition-all cursor-pointer touch-manipulation ${
+                      postcardTheme === t.id
+                        ? "bg-[var(--av-brand)] text-white font-bold shadow-xs"
+                        : "text-[var(--av-text-secondary)] hover:bg-[var(--av-surface)]"
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
           {/* سکوی نمایش کارت */}
           {loadingCards ? (
-            <div className="p-8 text-center text-xs text-[var(--av-text-muted)] rounded-2xl border border-[var(--av-surface-border)] bg-[var(--av-surface)]">
+            <div className="p-6 text-center text-xs text-[var(--av-text-muted)] rounded-xl border border-[var(--av-surface-border)] bg-[var(--av-surface)]">
               در حال آماده‌سازی…
             </div>
           ) : cards.length === 0 ? (
-            <div className="p-8 text-center text-xs text-[var(--av-text-muted)] rounded-2xl border border-[var(--av-surface-border)] bg-[var(--av-surface)] space-y-1">
-              <ImagePlus className="mx-auto h-6 w-6 opacity-40 text-[var(--av-brand)]" />
+            <div className="p-6 text-center text-xs text-[var(--av-text-muted)] rounded-xl border border-[var(--av-surface-border)] bg-[var(--av-surface)] space-y-1">
+              <ImagePlus className="mx-auto h-5 w-5 opacity-40 text-[var(--av-brand)]" />
               <p className="font-bold text-[var(--av-text)]">
                 تصویری یافت نشد.
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
-              <div className="p-2 sm:p-4 rounded-2xl border border-[var(--av-surface-border)] bg-[var(--av-surface-subtle)]/30 flex justify-center items-center overflow-hidden">
+            <div className="space-y-3">
+              <div className="p-1 sm:p-3 rounded-2xl border border-[var(--av-surface-border)] bg-[var(--av-surface-subtle)]/30 flex justify-center items-center overflow-hidden">
                 <AnimatePresence mode="wait">
                   {selectedCard && (
                     <motion.div
@@ -317,9 +344,10 @@ export default function KeyboardPage() {
                 </AnimatePresence>
               </div>
 
-              {/* اسلایدر انتخاب سریع تصویر در موبایل */}
+              {/* اسلایدر تصاویر */}
               <div
-                className="flex gap-2 overflow-x-auto p-2 [scrollbar-width:none]"
+                className="flex gap-1.5 overflow-x-auto py-1 px-0.5"
+                style={{ scrollbarWidth: "none" }}
                 dir="ltr"
               >
                 {cards.map((card) => (
@@ -327,7 +355,7 @@ export default function KeyboardPage() {
                     key={card.id}
                     type="button"
                     onClick={() => setSelected(card.id)}
-                    className={`relative h-16 w-16 sm:h-24 rounded-lg overflow-hidden border-2 transition-all cursor-pointer shrink-0 ${
+                    className={`relative h-12 w-12 sm:h-14 sm:w-14 rounded-lg overflow-hidden border-2 transition-all cursor-pointer shrink-0 touch-manipulation ${
                       selected === card.id
                         ? "border-[var(--av-brand)] scale-105 shadow-xs"
                         : "border-[var(--av-surface-border)] opacity-60"
@@ -336,7 +364,7 @@ export default function KeyboardPage() {
                     <img
                       src={card.src}
                       alt=""
-                      className="h-full w-full p-1 object-contain"
+                      className="h-full w-full p-0.5 object-contain"
                     />
                   </button>
                 ))}

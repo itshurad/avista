@@ -8,7 +8,7 @@ function splitAvestanLines(text, count = 5) {
     return ["𐬀𐬴𐬀⸱𐬎𐬴𐬙𐬀", "𐬵𐬎𐬨𐬀𐬙𐬀⸱𐬵𐬏𐬑𐬙𐬀⸱𐬵𐬎𐬎𐬀𐬭𐬱𐬙𐬀", "", "", ""];
   }
 
-  const maxChars = 20;
+  const maxChars = 16;
   const paragraphs = value.split("\n");
   const lines = [];
 
@@ -16,7 +16,7 @@ function splitAvestanLines(text, count = 5) {
     const words = paragraph.trim().split(/\s+/).filter(Boolean);
 
     if (!words.length) {
-      lines.push(""); // اینتر خالی هم یک خط جدا حساب می‌شود
+      lines.push("");
       continue;
     }
 
@@ -132,7 +132,7 @@ function getTextureStyle(texture, accent, line) {
     case "grid":
       return {
         backgroundImage: `linear-gradient(${line} 1px, transparent 1px), linear-gradient(90deg, ${line} 1px, transparent 1px)`,
-        backgroundSize: "18px 18px",
+        backgroundSize: "14px 14px",
         opacity: 0.6,
       };
     case "damask":
@@ -144,18 +144,14 @@ function getTextureStyle(texture, accent, line) {
       return {
         backgroundImage: `radial-gradient(1px 1px at 12% 22%, ${accent}66, transparent),
           radial-gradient(1.5px 1.5px at 78% 58%, ${accent}55, transparent),
-          radial-gradient(1px 1px at 42% 82%, ${accent}77, transparent),
-          radial-gradient(1.5px 1.5px at 63% 14%, ${accent}44, transparent),
-          radial-gradient(1px 1px at 90% 30%, ${accent}55, transparent)`,
+          radial-gradient(1px 1px at 42% 82%, ${accent}77, transparent)`,
         opacity: 0.8,
       };
     case "confetti":
       return {
-        backgroundImage: `radial-gradient(2px 2px at 15% 25%, ${accent}55, transparent),
-          radial-gradient(2px 2px at 82% 20%, ${accent}40, transparent),
-          radial-gradient(1.5px 1.5px at 35% 75%, ${accent}60, transparent),
-          radial-gradient(2px 2px at 68% 68%, ${accent}45, transparent),
-          radial-gradient(1.5px 1.5px at 92% 82%, ${accent}50, transparent)`,
+        backgroundImage: `radial-gradient(1.5px 1.5px at 15% 25%, ${accent}55, transparent),
+          radial-gradient(1.5px 1.5px at 82% 20%, ${accent}40, transparent),
+          radial-gradient(1.5px 1.5px at 35% 75%, ${accent}60, transparent)`,
         opacity: 0.7,
       };
     case "none":
@@ -164,66 +160,14 @@ function getTextureStyle(texture, accent, line) {
   }
 }
 
-function CornerMotif({ type, color }) {
-  const common = { width: 15, height: 15, fill: color, opacity: 0.55 };
-  switch (type) {
-    case "star":
-      return (
-        <svg viewBox="0 0 24 24" {...common}>
-          <path d="M12 1l2.6 7.2L22 11l-7.4 2.8L12 21l-2.6-7.2L2 11l7.4-2.8z" />
-        </svg>
-      );
-    case "leaf":
-      return (
-        <svg
-          viewBox="0 0 24 24"
-          {...common}
-          fill="none"
-          stroke={color}
-          strokeWidth="1.6"
-        >
-          <path d="M4 20c8-1 14-7 15-16-9 1-15 7-15 16z" />
-          <path d="M6 18c3-3 6-6 12-13" />
-        </svg>
-      );
-    case "crown":
-      return (
-        <svg viewBox="0 0 24 24" {...common}>
-          <path d="M3 8l4 3 5-6 5 6 4-3-2 10H5L3 8z" />
-        </svg>
-      );
-    case "spark":
-      return (
-        <svg
-          viewBox="0 0 24 24"
-          {...common}
-          fill="none"
-          stroke={color}
-          strokeWidth="2"
-          strokeLinecap="round"
-        >
-          <path d="M12 3v6M12 15v6M3 12h6M15 12h6M6 6l3 3M18 6l-3 3M6 18l3-3M18 18l-3-3" />
-        </svg>
-      );
-    case "dot":
-    default:
-      return (
-        <svg viewBox="0 0 24 24" {...common}>
-          <circle cx="12" cy="12" r="5" />
-        </svg>
-      );
-  }
-}
-
 export default function Postcard({
   card,
   text,
   palette,
   cardRef,
-  theme = "classic", // classic | heritage | modern | fantasy | royal | festive | night | botanical
+  theme = "classic",
 }) {
   const lines = splitAvestanLines(text);
-
   const styles = useMemo(() => resolveStyles(theme, palette), [theme, palette]);
   const texture = useMemo(
     () => getTextureStyle(styles.texture, styles.accent, styles.line),
@@ -231,17 +175,18 @@ export default function Postcard({
   );
 
   return (
-    <div className="relative mx-auto w-full max-w-[580px] p-2" dir="rtl">
+    <div className="relative mx-auto w-full max-w-[580px]" dir="rtl">
+      {/* ساختار اصیل کارت‌پستال: همواره دو ستونه، افقی و متناسب با ابعاد پاکت نامه */}
       <article
         ref={cardRef}
-        className="relative mx-auto w-full aspect-[1.52/1] rounded-[20px] p-5 shadow-2xl overflow-hidden flex transition-all duration-300 select-none"
+        className="relative mx-auto w-full aspect-[1.52/1] rounded-2xl sm:rounded-3xl p-2.5 sm:p-5 shadow-2xl overflow-hidden flex select-none transition-all duration-300"
         style={{
           backgroundColor: styles.bg,
           color: styles.ink,
           border: `1px solid ${styles.line}`,
         }}
       >
-        {/* بافت ظریف پس‌زمینه مخصوص هر پوسته */}
+        {/* بافت لطیف پس‌زمینه */}
         {texture && (
           <div
             className="absolute inset-0 z-0 pointer-events-none"
@@ -249,29 +194,20 @@ export default function Postcard({
           />
         )}
 
-        {/* قاب پرفراژ کلاسیک تمبر — یک مسیر واحد، بدون افت کیفیت در گوشه‌ها */}
-
-        {/* کادر باریک دوخطی دور فضای چاپ */}
+        {/* کادر باریک حاشیه کارت */}
         <div
-          className="absolute inset-2.5 rounded-[14px] border pointer-events-none z-10"
+          className="absolute inset-1.5 sm:inset-2.5 rounded-xl sm:rounded-2xl border pointer-events-none z-10"
           style={{ borderColor: styles.line }}
         />
 
-        {/* نمادهای کوچک تزیینی گوشه‌های پایین، متناسب با پوسته */}
-        <div className="absolute bottom-4 left-4 z-10">
-          <CornerMotif type={styles.motif} color={styles.accent} />
-        </div>
-        <div className="absolute bottom-4 right-4 z-10 rotate-180">
-          <CornerMotif type={styles.motif} color={styles.accent} />
-        </div>
-
-        <div className="relative z-10 grid grid-cols-12 gap-4 w-full h-full items-center p-1">
-          {/* ستون عکس */}
+        {/* تقسیم‌بندی دو ستونه پستی در تمام رزولوشن‌ها */}
+        <div className="relative z-10 grid grid-cols-12 gap-2 sm:gap-4 w-full h-full items-center p-0.5 sm:p-1">
+          {/* ۱. ستون قاب عکس سمت چپ */}
           <div
-            className="col-span-5 h-full relative rounded-xl overflow-hidden p-1 bg-white/40 shadow-sm border"
+            className="col-span-5 h-full relative rounded-lg sm:rounded-xl overflow-hidden p-0.5 sm:p-1 bg-white/40 shadow-xs border"
             style={{ borderColor: styles.line }}
           >
-            <div className="w-full h-full relative rounded-lg overflow-hidden">
+            <div className="w-full h-full relative rounded-md sm:rounded-lg overflow-hidden">
               <img
                 src={card.src}
                 alt="کارت‌پستال آویستا"
@@ -281,30 +217,31 @@ export default function Postcard({
             </div>
           </div>
 
-          {/* خط جداکنندهٔ عمودی وسط کارت */}
+          {/* ۲. خط پرفراژ میانی تمبر */}
           <div
-            className="hidden sm:block absolute right-[43%] top-5 bottom-5 w-px border-r border-dashed"
+            className="absolute right-[42%] top-3 bottom-3 w-px border-r border-dashed pointer-events-none"
             style={{ borderColor: styles.line }}
           />
 
-          {/* ستون راست: متن اوستایی، تمبر و مهر پستی */}
-          <div className="col-span-7 h-full flex flex-col justify-between pr-1">
+          {/* ۳. ستون نگارش، تمبر و مهر پستی سمت راست */}
+          <div className="col-span-7 h-full flex flex-col justify-between pr-1 sm:pr-2 py-0.5">
+            {/* سربرگ: تمبر پستی و مهر تاریخ‌دار */}
             <div className="flex items-start justify-between">
-              {/* مهر ابطال پستی */}
+              {/* مهر پست مدور */}
               <div
-                className="flex items-center gap-1 opacity-70"
+                className="flex items-center gap-0.5 sm:gap-1 opacity-70"
                 style={{ color: styles.accent }}
               >
                 <div
-                  className="w-10 h-10 rounded-full border-2 border-dashed flex flex-col items-center justify-center -rotate-12 text-[7px] leading-none"
+                  className="w-6 h-6 sm:w-9 sm:h-9 rounded-full border border-dashed flex flex-col items-center justify-center -rotate-12 text-[5px] sm:text-[7px] leading-none shrink-0"
                   style={{ borderColor: styles.accent }}
                 >
                   <span className="font-bold">AVISTA</span>
-                  <span className="text-[6px] my-0.5">POST</span>
+                  <span className="text-[4px] sm:text-[5px] my-0.5">POST</span>
                   <span>YASNA</span>
                 </div>
                 <svg
-                  className="w-8 h-6 stroke-current fill-none stroke-[1.5]"
+                  className="w-4 h-3 sm:w-6 sm:h-4 stroke-current fill-none stroke-[1.2]"
                   viewBox="0 0 40 24"
                 >
                   <path d="M0 6 Q 10 0, 20 6 T 40 6" />
@@ -313,24 +250,22 @@ export default function Postcard({
                 </svg>
               </div>
 
-              {/* تمبر اختصاصی */}
+              {/* تمبر با لوگوی آویستا */}
               <div
-                className="relative w-11 h-14 rounded p-1 flex flex-col items-center justify-between shadow-xs border"
+                className="relative w-7 h-9 sm:w-10 sm:h-13 rounded sm:rounded-lg p-0.5 sm:p-1 flex flex-col items-center justify-between shadow-xs border shrink-0"
                 style={{
                   backgroundColor: styles.stampBg,
                   borderColor: `${styles.accent}55`,
                 }}
               >
-                <div className="flex items-center justify-between w-full px-0.5">
-                  <span
-                    className="text-[7px] font-bold"
-                    style={{ color: styles.accent }}
-                  >
+                <div className="flex items-center justify-between w-full px-0.5 text-[5px] sm:text-[7px] leading-none">
+                  <span className="font-bold" style={{ color: styles.accent }}>
                     50D
                   </span>
-                  <span className="text-[6px] opacity-40">IR</span>
+                  <span className="opacity-40">IR</span>
                 </div>
-                <div className="relative rounded-full h-6 w-6 my-auto">
+
+                <div className="relative rounded-full h-3.5 w-3.5 sm:h-5 sm:w-5 my-auto overflow-hidden">
                   <img
                     src="/logo.png"
                     alt="تمبر آویستا"
@@ -338,30 +273,31 @@ export default function Postcard({
                     className="h-full w-full object-contain filter drop-shadow-xs rounded-full"
                   />
                 </div>
-                <span className="text-[6px] tracking-tight opacity-50 uppercase">
+
+                <span className="text-[4px] sm:text-[5.5px] tracking-tight opacity-50 uppercase leading-none">
                   Avista
                 </span>
               </div>
             </div>
 
-            {/* خطوط نگارش دین‌دبیره */}
-            <div className="my-auto space-y-2 sm:space-y-2.5" dir="rtl">
+            {/* خطوط سطرنویسی خوش‌نویسی اوستایی */}
+            <div className="space-y-1 sm:space-y-2 my-auto" dir="rtl">
               {lines.map((line, index) => (
                 <div
                   key={index}
-                  className="pb-0.5 min-h-[18px] sm:min-h-[20px] flex items-center justify-start border-b border-dashed"
+                  className="pb-0.5 min-h-[14px] sm:min-h-[19px] flex items-center justify-start border-b border-dashed"
                   style={{ borderColor: styles.line }}
                 >
-                  <span className="avestan-glyph text-base sm:text-[17px] leading-none text-right w-full tracking-wide">
+                  <span className="avestan-glyph text-xs sm:text-[16px] leading-none text-right w-full tracking-wide truncate">
                     {line}
                   </span>
                 </div>
               ))}
             </div>
 
-            {/* پانویس */}
+            {/* پانویس پستی */}
             <div
-              className="pt-1.5 border-t flex items-center justify-between text-[8px] opacity-55"
+              className="pt-1 border-t flex items-center justify-between text-[6px] sm:text-[8px] opacity-60"
               style={{ borderColor: styles.line }}
             >
               <span>دین‌دبیره · DIN DABIREH</span>

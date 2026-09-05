@@ -1024,3 +1024,10 @@ a {
   background: var(--av-brand);
   color: #ffffff;
 }
+@media (hover: hover) {
+  .av-glass-key:hover {
+    border-color: rgba(0, 109, 255, 0.4);
+    background: rgba(0, 109, 255, 0.08);
+    box-shadow: 0 4px 14px rgba(0, 109, 255, 0.2);
+  }
+}
