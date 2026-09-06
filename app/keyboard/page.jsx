@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Download, ImagePlus, Palette, ChevronLeft } from "lucide-react";
-import { toPng } from "html-to-image";
+import { toBlob, toPng } from "html-to-image";
 import AvestanKeyboard from "@/components/keyboard/AvestanKeyboard";
 import Postcard from "@/components/postcard/Postcard";
 import Button from "@/components/shared/Button";
@@ -179,19 +179,45 @@ export default function KeyboardPage() {
     const node = cardRefs.current[card.id];
     if (!node) return;
     setDownloading(true);
+    const fileName = `avista-kartpostal-${card.id}.png`;
+
     try {
-      const dataUrl = await toPng(node, {
+      // pixelRatio: 2 کافیست و باعث سبک‌تر شدن فایل و پایداری بیشتر در سافاری می‌شود
+      const blob = await toBlob(node, {
         cacheBust: true,
-        pixelRatio: 2.5,
+        pixelRatio: 2,
         backgroundColor: palettes[card.id]?.bg || "#0C121C",
-        skipFonts: false,
       });
+      if (!blob) throw new Error("blob-generation-failed");
+
+      const file = new File([blob], fileName, { type: "image/png" });
+
+      // آیفون/سافاری: دانلود مستقیم پشتیبانی نمی‌شود، از شیت اشتراک‌گذاری استفاده می‌کنیم
+      if (navigator.canShare?.({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: "کارت‌پستال آویستا" });
+        } catch (shareError) {
+          if (shareError?.name !== "AbortError") throw shareError;
+        }
+        return;
+      }
+
+      // بقیه مرورگرها: دانلود مستقیم با blob URL (سبک‌تر و پایدارتر از data URL)
+      const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.download = `avista-kartpostal-${card.id}.png`;
-      link.href = dataUrl;
+      link.download = fileName;
+      link.href = url;
+      document.body.appendChild(link);
       link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
     } catch (error) {
       console.error("خطا در خروجی کارت‌پستال:", error);
+      // فallback نهایی: باز کردن تصویر در تب جدید تا با لمس طولانی ذخیره شود
+      try {
+        const dataUrl = await toPng(node, { cacheBust: true, pixelRatio: 2 });
+        window.open(dataUrl, "_blank");
+      } catch {}
     } finally {
       setDownloading(false);
     }
@@ -257,7 +283,9 @@ export default function KeyboardPage() {
                 className="h-8 px-3 text-xs"
               >
                 <Download className="h-3 w-3 ml-1" />
-                <span>{downloading ? "در حال ساخت…" : "دانلود کارت"}</span>
+                <span>
+                  {downloading ? "در حال ساخت…" : "دانلود / ذخیره کارت"}
+                </span>
               </Button>
             )}
           </div>
@@ -287,6 +315,11 @@ export default function KeyboardPage() {
                   { id: "festive", label: "جشن" },
                   { id: "night", label: "شب" },
                   { id: "botanical", label: "گیاهی" },
+                  { id: "sunset", label: "غروب" },
+                  { id: "ocean", label: "دریایی" },
+                  { id: "desert", label: "کویری" },
+                  { id: "winter", label: "زمستانی" },
+                  { id: "cyber", label: "سایبری" },
                 ].map((t) => (
                   <button
                     key={t.id}

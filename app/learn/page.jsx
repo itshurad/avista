@@ -186,6 +186,7 @@ export default function LearnPage() {
                       <NumberCard
                         key={num.id}
                         number={num}
+                        variant="rose"
                         isCompleted={completedSet.has(num.id)}
                         href={`/learn/${num.id}`}
                       />
