@@ -182,17 +182,41 @@ export default function KeyboardPage() {
     const fileName = `avista-kartpostal-${card.id}.png`;
 
     try {
-      // pixelRatio: 2 کافیست و باعث سبک‌تر شدن فایل و پایداری بیشتر در سافاری می‌شود
+      // اطمینان از بارگذاری کامل فونت‌ها قبل از رندر (مخصوصاً برای گلیف‌های اوستایی)
+      if (document.fonts?.ready) {
+        await document.fonts.ready;
+      }
+
+      // اطمینان از دیکود کامل تمام عکس‌های داخل کارت (رفع باگ افتادن عکس در سافاری)
+      const images = Array.from(node.querySelectorAll("img"));
+      await Promise.all(
+        images.map((img) =>
+          img.decode ? img.decode().catch(() => {}) : Promise.resolve(),
+        ),
+      );
+
+      // اندازه واقعی المان را صریح می‌گیریم؛ سافاری با aspect-ratio داخل
+      // foreignObject درست محاسبه نمی‌کند، پس عرض/ارتفاع را دستی می‌دهیم
+      const rect = node.getBoundingClientRect();
+      const width = Math.round(rect.width);
+      const height = Math.round(rect.height);
+
       const blob = await toBlob(node, {
         cacheBust: true,
         pixelRatio: 2,
+        width,
+        height,
+        style: {
+          width: `${width}px`,
+          height: `${height}px`,
+          margin: "0",
+        },
         backgroundColor: palettes[card.id]?.bg || "#0C121C",
       });
       if (!blob) throw new Error("blob-generation-failed");
 
       const file = new File([blob], fileName, { type: "image/png" });
 
-      // آیفون/سافاری: دانلود مستقیم پشتیبانی نمی‌شود، از شیت اشتراک‌گذاری استفاده می‌کنیم
       if (navigator.canShare?.({ files: [file] })) {
         try {
           await navigator.share({ files: [file], title: "کارت‌پستال آویستا" });
@@ -202,7 +226,6 @@ export default function KeyboardPage() {
         return;
       }
 
-      // بقیه مرورگرها: دانلود مستقیم با blob URL (سبک‌تر و پایدارتر از data URL)
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.download = fileName;
@@ -213,7 +236,6 @@ export default function KeyboardPage() {
       setTimeout(() => URL.revokeObjectURL(url), 4000);
     } catch (error) {
       console.error("خطا در خروجی کارت‌پستال:", error);
-      // فallback نهایی: باز کردن تصویر در تب جدید تا با لمس طولانی ذخیره شود
       try {
         const dataUrl = await toPng(node, { cacheBust: true, pixelRatio: 2 });
         window.open(dataUrl, "_blank");

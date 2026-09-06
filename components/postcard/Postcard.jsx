@@ -279,7 +279,7 @@ export default function Postcard({
               <img
                 src={card.src}
                 alt="کارت‌پستال آویستا"
-                crossOrigin="anonymous"
+
                 className="w-full h-full object-cover object-center"
               />
             </div>
@@ -338,7 +338,6 @@ export default function Postcard({
                   <img
                     src="/logo.png"
                     alt="تمبر آویستا"
-                    crossOrigin="anonymous"
                     className="h-full w-full object-contain filter drop-shadow-xs rounded-full"
                   />
                 </div>
@@ -383,3 +382,4 @@ export default function Postcard({
     </div>
   );
 }
+
