@@ -2,14 +2,45 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Download, ImagePlus, Palette, ChevronLeft } from "lucide-react";
+import {
+  Download,
+  ImagePlus,
+  Palette,
+  ChevronLeft,
+  Share2,
+} from "lucide-react";
 import { toBlob, toPng } from "html-to-image";
 import AvestanKeyboard from "@/components/keyboard/AvestanKeyboard";
-import Postcard from "@/components/postcard/Postcard";
+import Postcard, {
+  getPostcardExportBackground,
+} from "@/components/postcard/Postcard";
 import Button from "@/components/shared/Button";
 
 const MAX_POSTCARDS = 50;
 const POSTCARD_BASE = "/kartpostal";
+
+const THEME_OPTIONS = [
+  { id: "classic", label: "کلاسیک" },
+  { id: "heritage", label: "عتیقه" },
+  { id: "modern", label: "تیره" },
+  { id: "fantasy", label: "فانتزی" },
+  { id: "royal", label: "سلطنتی" },
+  { id: "festive", label: "جشن" },
+  { id: "night", label: "شب" },
+  { id: "botanical", label: "گیاهی" },
+  { id: "sunset", label: "غروب" },
+  { id: "ocean", label: "دریایی" },
+  { id: "desert", label: "کویری" },
+  { id: "winter", label: "زمستانی" },
+  { id: "cyber", label: "سایبری" },
+  // ---- تم‌های جدید ----
+  { id: "autumn", label: "پاییزی" },
+  { id: "mint", label: "نعنایی" },
+  { id: "rose", label: "رز" },
+  { id: "midnight", label: "نیمه‌شب" },
+  { id: "gold", label: "طلایی" },
+  { id: "lavender", label: "اسطوخودوس" },
+];
 
 function rgbToHex({ r, g, b }) {
   return `#${[r, g, b]
@@ -137,6 +168,21 @@ async function findPostcardImages() {
   return found;
 }
 
+// تشخیص پلتفرم برای انتخاب رفتار درست دکمه‌ی دانلود:
+// - iOS: دانلود مستقیم فایل امکان «ذخیره در گالری» نمی‌دهد، پس باید از
+//   Web Share API استفاده کرد (که در سافاری گزینه‌ی «Save Image» را می‌آورد).
+// - اندروید/دسکتاپ: به‌جای شیت اشتراک‌گذاری، باید فایل مستقیماً دانلود شود.
+function detectPlatform() {
+  if (typeof navigator === "undefined") return "desktop";
+  const ua = navigator.userAgent || "";
+  const isIOS =
+    /iPad|iPhone|iPod/.test(ua) ||
+    (ua.includes("Macintosh") && navigator.maxTouchPoints > 1);
+  if (isIOS) return "ios";
+  if (/Android/i.test(ua)) return "android";
+  return "desktop";
+}
+
 export default function KeyboardPage() {
   const reduceMotion = useReducedMotion();
   const [text, setText] = useState("");
@@ -146,7 +192,12 @@ export default function KeyboardPage() {
   const [postcardTheme, setPostcardTheme] = useState("classic");
   const [loadingCards, setLoadingCards] = useState(true);
   const [downloading, setDownloading] = useState(false);
+  const [platform, setPlatform] = useState("desktop");
   const cardRefs = useRef({});
+
+  useEffect(() => {
+    setPlatform(detectPlatform());
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -201,6 +252,15 @@ export default function KeyboardPage() {
       const width = Math.round(rect.width);
       const height = Math.round(rect.height);
 
+      // نکته‌ی مهم: پس‌زمینه‌ی خروجی باید رنگ واقعیِ پوسته‌ی انتخاب‌شده
+      // باشد، نه رنگ پالت استخراج‌شده از خود عکس. قبلاً همیشه از پالت
+      // استفاده می‌شد که فقط برای تم «کلاسیک» درست بود و برای تم‌هایی
+      // مثل «سلطنتی» رنگ خروجی را عوض می‌کرد.
+      const exportBackground = getPostcardExportBackground(
+        postcardTheme,
+        palettes[card.id],
+      );
+
       const blob = await toBlob(node, {
         cacheBust: true,
         pixelRatio: 2,
@@ -211,13 +271,17 @@ export default function KeyboardPage() {
           height: `${height}px`,
           margin: "0",
         },
-        backgroundColor: palettes[card.id]?.bg || "#0C121C",
+        backgroundColor: exportBackground,
+        fetchRequestInit: { cache: "no-store" },
       });
       if (!blob) throw new Error("blob-generation-failed");
 
       const file = new File([blob], fileName, { type: "image/png" });
 
-      if (navigator.canShare?.({ files: [file] })) {
+      // فقط در iOS از شیت اشتراک‌گذاری استفاده می‌کنیم؛ در اندروید/دسکتاپ
+      // کاربر دکمه‌ی «دانلود» را می‌زند و باید مستقیماً فایل ذخیره شود،
+      // نه اینکه شیت Share باز شود.
+      if (platform === "ios" && navigator.canShare?.({ files: [file] })) {
         try {
           await navigator.share({ files: [file], title: "کارت‌پستال آویستا" });
         } catch (shareError) {
@@ -253,6 +317,8 @@ export default function KeyboardPage() {
         accent: "#006DFF",
       }
     : null;
+
+  const isIOSPlatform = platform === "ios";
 
   return (
     <div className="relative overflow-hidden py-4 sm:py-10">
@@ -304,9 +370,17 @@ export default function KeyboardPage() {
                 disabled={downloading}
                 className="h-8 px-3 text-xs"
               >
-                <Download className="h-3 w-3 ml-1" />
+                {isIOSPlatform ? (
+                  <Share2 className="h-3 w-3 ml-1" />
+                ) : (
+                  <Download className="h-3 w-3 ml-1" />
+                )}
                 <span>
-                  {downloading ? "در حال ساخت…" : "دانلود / ذخیره کارت"}
+                  {downloading
+                    ? "در حال ساخت…"
+                    : isIOSPlatform
+                      ? "اشتراک‌گذاری / ذخیره"
+                      : "دانلود کارت"}
                 </span>
               </Button>
             )}
@@ -328,21 +402,7 @@ export default function KeyboardPage() {
                   scrollbarColor: "var(--av-brand) transparent",
                 }}
               >
-                {[
-                  { id: "classic", label: "کلاسیک" },
-                  { id: "heritage", label: "عتیقه" },
-                  { id: "modern", label: "تیره" },
-                  { id: "fantasy", label: "فانتزی" },
-                  { id: "royal", label: "سلطنتی" },
-                  { id: "festive", label: "جشن" },
-                  { id: "night", label: "شب" },
-                  { id: "botanical", label: "گیاهی" },
-                  { id: "sunset", label: "غروب" },
-                  { id: "ocean", label: "دریایی" },
-                  { id: "desert", label: "کویری" },
-                  { id: "winter", label: "زمستانی" },
-                  { id: "cyber", label: "سایبری" },
-                ].map((t) => (
+                {THEME_OPTIONS.map((t) => (
                   <button
                     key={t.id}
                     type="button"
@@ -379,9 +439,13 @@ export default function KeyboardPage() {
                   {selectedCard && (
                     <motion.div
                       key={selectedCard.id}
-                      initial={{ opacity: 0, scale: 0.98 }}
+                      initial={
+                        reduceMotion ? false : { opacity: 0, scale: 0.98 }
+                      }
                       animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.98 }}
+                      exit={
+                        reduceMotion ? undefined : { opacity: 0, scale: 0.98 }
+                      }
                       transition={{ duration: 0.2 }}
                       className="w-full flex justify-center"
                     >
@@ -399,30 +463,46 @@ export default function KeyboardPage() {
                 </AnimatePresence>
               </div>
 
-              {/* اسلایدر تصاویر */}
-              <div
-                className="flex gap-1.5 overflow-x-auto py-1 px-0.5"
-                style={{ scrollbarWidth: "none" }}
-                dir="ltr"
-              >
-                {cards.map((card) => (
-                  <button
-                    key={card.id}
-                    type="button"
-                    onClick={() => setSelected(card.id)}
-                    className={`relative h-12 w-12 sm:h-14 sm:w-14 rounded-lg overflow-hidden border-2 transition-all cursor-pointer shrink-0 touch-manipulation ${
-                      selected === card.id
-                        ? "border-[var(--av-brand)] scale-105 shadow-xs"
-                        : "border-[var(--av-surface-border)] opacity-60"
-                    }`}
+              {/* گالری انتخاب عکس: تا ۵۰ تصویر پشتیبانی می‌شود، پس اسکرول
+                  باید واضح و همراه با نشانه‌ی بصری باشد تا صفحه بهم نریزد */}
+              <div className="space-y-1">
+                <div className="flex items-center justify-between px-0.5">
+                  <span className="text-[10px] text-[var(--av-text-muted)]">
+                    {cards.length} تصویر — برای دیدن بقیه اسکرول کنید
+                  </span>
+                </div>
+                <div className="relative">
+                  <div
+                    className="flex gap-1.5 overflow-x-auto py-1 px-0.5 snap-x snap-mandatory scroll-smooth"
+                    style={{
+                      scrollbarWidth: "thin",
+                      scrollbarColor: "var(--av-brand) transparent",
+                    }}
+                    dir="ltr"
                   >
-                    <img
-                      src={card.src}
-                      alt=""
-                      className="h-full w-full p-0.5 object-contain"
-                    />
-                  </button>
-                ))}
+                    {cards.map((card) => (
+                      <button
+                        key={card.id}
+                        type="button"
+                        onClick={() => setSelected(card.id)}
+                        className={`relative h-12 w-12 sm:h-14 sm:w-14 rounded-lg overflow-hidden border-2 transition-all cursor-pointer shrink-0 snap-start touch-manipulation ${
+                          selected === card.id
+                            ? "border-[var(--av-brand)] scale-105 shadow-xs"
+                            : "border-[var(--av-surface-border)] opacity-60"
+                        }`}
+                      >
+                        <img
+                          src={card.src}
+                          alt=""
+                          className="h-full w-full p-0.5 object-contain"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                  {/* سایه‌های راهنما در دو طرف برای نشان دادن قابل‌اسکرول بودن ردیف */}
+                  <div className="pointer-events-none absolute inset-y-0 right-0 w-6 bg-gradient-to-l from-[var(--av-surface)] to-transparent" />
+                  <div className="pointer-events-none absolute inset-y-0 left-0 w-6 bg-gradient-to-r from-[var(--av-surface)] to-transparent" />
+                </div>
               </div>
             </div>
           )}

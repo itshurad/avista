@@ -1,6 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+
+// نسبت ابعاد کارت‌پستال؛ همیشه از این عدد برای محاسبه‌ی صریح ارتفاع
+// به پیکسل استفاده می‌شود (به‌جای تکیه بر CSS aspect-ratio که در
+// رندر داخل foreignObject سافاری/iOS به‌درستی محاسبه نمی‌شود و باعث
+// به‌هم‌ریختن قالب کارت هم در نمایش زنده و هم در خروجی دانلود می‌شود).
+const CARD_RATIO = 1.52; // width / height
 
 function splitAvestanLines(text, count = 5) {
   const value = text.replace(/\r\n/g, "\n");
@@ -101,7 +107,6 @@ const THEME_PRESETS = {
     stampBg: "#FFFFFF",
     texture: "paper",
   },
-  // ---- پوسته‌های جدید ----
   sunset: {
     bg: "#FFE8D6",
     ink: "#5C2A0A",
@@ -142,6 +147,55 @@ const THEME_PRESETS = {
     stampBg: "rgba(0,245,212,0.08)",
     texture: "circuit",
   },
+  // ---- پوسته‌های جدید ----
+  autumn: {
+    bg: "#FBEADC",
+    ink: "#4A2311",
+    line: "rgba(74, 35, 17, 0.18)",
+    accent: "#C2571B",
+    stampBg: "#FFF7EE",
+    texture: "dune",
+  },
+  mint: {
+    bg: "#E7F6EF",
+    ink: "#0F3D30",
+    line: "rgba(15, 61, 48, 0.16)",
+    accent: "#1FA37B",
+    stampBg: "#FFFFFF",
+    texture: "waves",
+  },
+  rose: {
+    bg: "#FCE9EF",
+    ink: "#5C1B33",
+    line: "rgba(92, 27, 51, 0.16)",
+    accent: "#D6437B",
+    stampBg: "#FFFFFF",
+    texture: "confetti",
+  },
+  midnight: {
+    bg: "#0A0E27",
+    ink: "#DCE3FF",
+    line: "rgba(220, 227, 255, 0.14)",
+    accent: "#5B6EF5",
+    stampBg: "rgba(91,110,245,0.1)",
+    texture: "stars",
+  },
+  gold: {
+    bg: "#141210",
+    ink: "#F3E3B8",
+    line: "rgba(243, 227, 184, 0.18)",
+    accent: "#E8C468",
+    stampBg: "rgba(232,196,104,0.12)",
+    texture: "damask",
+  },
+  lavender: {
+    bg: "#F1ECFB",
+    ink: "#3A2A5C",
+    line: "rgba(58, 42, 92, 0.16)",
+    accent: "#8B6FD9",
+    stampBg: "#FFFFFF",
+    texture: "grid",
+  },
 };
 
 function resolveStyles(theme, palette) {
@@ -156,6 +210,14 @@ function resolveStyles(theme, palette) {
     };
   }
   return THEME_PRESETS[theme];
+}
+
+// این تابع را از بیرون (صفحه‌ی دانلود) هم صدا می‌زنیم تا رنگ پس‌زمینه‌ی
+// خروجی PNG دقیقاً همان رنگ پوسته‌ی انتخاب‌شده باشد، نه رنگ پالت
+// استخراج‌شده از عکس (که قبلاً باعث می‌شد تم‌هایی مثل «سلطنتی» موقع
+// دانلود رنگ‌شان عوض شود).
+export function getPostcardExportBackground(theme, palette) {
+  return resolveStyles(theme, palette).bg;
 }
 
 function getTextureStyle(texture, accent, line) {
@@ -189,7 +251,6 @@ function getTextureStyle(texture, accent, line) {
           radial-gradient(1.5px 1.5px at 82% 20%, ${accent}40, transparent)`,
         opacity: 0.7,
       };
-    // ---- بافت‌های جدید ----
     case "rays":
       return {
         backgroundImage: `repeating-conic-gradient(from 0deg at 100% 0%, ${line} 0deg 2deg, transparent 2deg 14deg)`,
@@ -240,8 +301,39 @@ export default function Postcard({
     [styles],
   );
 
+  // به‌جای CSS aspect-ratio (که در Safari/iOS داخل foreignObject درست
+  // محاسبه نمی‌شود و باعث بهم‌ریختن کل قالب می‌شود)، ارتفاع کارت را
+  // همیشه به‌صورت یک عدد صریح پیکسلی نگه می‌داریم. هم نمایش زنده و هم
+  // خروجی دانلود از همین ارتفاع استفاده می‌کنند، پس رفتار هر دو یکسان
+  // و قابل پیش‌بینی می‌شود.
+  const wrapperRef = useRef(null);
+  const [cardHeight, setCardHeight] = useState(null);
+
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+
+    const update = () => {
+      const width = el.getBoundingClientRect().width;
+      if (width) setCardHeight(Math.round(width / CARD_RATIO));
+    };
+
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    window.addEventListener("orientationchange", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("orientationchange", update);
+    };
+  }, []);
+
   return (
-    <div className="relative mx-auto w-full max-w-[580px]" dir="rtl">
+    <div
+      ref={wrapperRef}
+      className="relative mx-auto w-full max-w-[580px]"
+      dir="rtl"
+    >
       {/* ابعاد ایزوله برای ثبات کامل در موبایل و دسکتاپ سافاری */}
       <article
         ref={cardRef}
@@ -250,7 +342,11 @@ export default function Postcard({
           backgroundColor: styles.bg,
           color: styles.ink,
           border: `1px solid ${styles.line}`,
-          aspectRatio: "1.52 / 1",
+          // تا وقتی ارتفاع دقیق اندازه‌گیری نشده از aspect-ratio به‌عنوان
+          // فقط یک fallback موقت برای اولین رندر استفاده می‌کنیم؛ به محض
+          // اندازه‌گیری، عدد پیکسلی صریح جایگزینش می‌شود.
+          height: cardHeight ? `${cardHeight}px` : undefined,
+          aspectRatio: cardHeight ? undefined : `${CARD_RATIO} / 1`,
           display: "flex",
         }}
       >
@@ -279,8 +375,10 @@ export default function Postcard({
               <img
                 src={card.src}
                 alt="کارت‌پستال آویستا"
-
+                crossOrigin="anonymous"
+                decoding="sync"
                 className="w-full h-full object-cover object-center"
+                style={{ objectFit: "cover", width: "100%", height: "100%" }}
               />
             </div>
           </div>
@@ -338,6 +436,8 @@ export default function Postcard({
                   <img
                     src="/logo.png"
                     alt="تمبر آویستا"
+                    crossOrigin="anonymous"
+                    decoding="sync"
                     className="h-full w-full object-contain filter drop-shadow-xs rounded-full"
                   />
                 </div>
@@ -356,10 +456,26 @@ export default function Postcard({
               {lines.map((line, index) => (
                 <div
                   key={index}
-                  className="pb-0.5 min-h-[13px] xs:min-h-[16px] sm:min-h-[20px] flex items-center justify-start border-b border-dashed"
+                  className="pb-0.5 min-h-[17px] xs:min-h-[21px] sm:min-h-[27px] flex items-center justify-start border-b border-dashed overflow-visible"
                   style={{ borderColor: styles.line }}
                 >
-                  <span className="avestan-glyph text-xs xs:text-sm sm:text-[17px] leading-none text-right w-full tracking-wide truncate">
+                  {/* درخواست بولد شدن فونت اوستایی: هم کلاس font-bold و هم
+                      fontWeight صریح، تا در خروجی html-to-image هم اعمال شود.
+                      leading-none قبلاً باکس خط را آنقدر کوتاه می‌کرد که
+                      دنباله‌ی زیرین بعضی گلیف‌های اوستایی (مثل حروفی که
+                      انحنای پایین‌رو دارند) بریده می‌شد؛ حالا line-height
+                      باز است و overflow هم دیگر hidden نیست تا کل انحنای
+                      حرف نمایش داده شود. whitespace-nowrap جای truncate
+                      نشسته چون طول خط از قبل توسط splitAvestanLines
+                      محدود شده و نیازی به قطع با overflow-hidden نیست. */}
+                  <span
+                    className="avestan-glyph font-bold text-xs xs:text-sm sm:text-[17px] text-right w-full tracking-wide whitespace-nowrap block"
+                    style={{
+                      fontWeight: 700,
+                      lineHeight: 1.6,
+                      overflow: "visible",
+                    }}
+                  >
                     {line}
                   </span>
                 </div>
@@ -373,7 +489,7 @@ export default function Postcard({
             >
               <span className="truncate">دین‌دبیره · DIN DABIREH</span>
               <span style={{ color: styles.accent }} className="shrink-0 pr-1">
-                AVISTA.IR
+                AVISTA
               </span>
             </div>
           </div>
@@ -382,4 +498,3 @@ export default function Postcard({
     </div>
   );
 }
-
